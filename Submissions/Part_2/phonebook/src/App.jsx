@@ -78,8 +78,8 @@ const App = () => {
       personServices
         .removePerson(id)
         .then(response => {
-          setPersons(persons.filter(person => person.id !== response.id));
-          setNewNotification({message: `Deleted ${response.name}`, type: "delete"});
+          setPersons(persons.filter(person => person.id !== id));
+          setNewNotification({message: `Deleted ${name}`, type: "delete"});
           setTimeout(() => {
               setNewNotification({message: null, type: null});
             }, 5000);
