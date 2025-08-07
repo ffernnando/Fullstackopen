@@ -3,10 +3,15 @@ const morgan = require("morgan")
 
 const app = express()
 app.use(express.json())
+app.use(express.static("dist"))
+
+const cors = require('cors')
+app.use(cors())
 
 morgan.token("body", (request) => {
     return request.method === "POST" ? JSON.stringify(request.body) : ""
 })
+
 
 //app.use(morgan("tiny"))
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
@@ -60,6 +65,7 @@ app.delete("/api/persons/:id", (request, response) => {
     const id = request.params.id
     persons = persons.filter(person => person.id !== id)
     response.status(204).end()
+    console.log("DELETE CALLED!")
 })
 
 app.post("/api/persons", (request, response) => {
@@ -78,9 +84,10 @@ app.post("/api/persons", (request, response) => {
     persons = persons.concat(newPerson)
     console.log(newPerson)
     response.json(newPerson)
+
 })
 
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })
