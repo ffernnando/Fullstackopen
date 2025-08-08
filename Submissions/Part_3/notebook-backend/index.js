@@ -17,14 +17,20 @@ morgan.token("body", (request) => {
 })
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
-app.get("/api/persons", (request, response) => {
+// ----------------------------------------------------- Get ALL PERSONS -----------------------------------------------------
+app.get("/api/persons", (request, response, next) => {
     console.log("This is getting called")
-    Person.find({}).then(result => {
-        console.log("this is working: ", result)
-        response.json(result)
-    })
+    Person.find({})
+        .then(result => {
+            console.log("this is working: ", result)
+            response.json(result)
+        })
+        .catch(error =>{
+            next(error)
+        })
 })
 
+// -------------------------------------------------------- INFO PAGE --------------------------------------------------------
 app.get("/info", (request, response) => {
     Person.countDocuments({}).then(result => {
         const personCount = result
@@ -36,21 +42,34 @@ app.get("/info", (request, response) => {
     
 })
 
+// -------------------------------------------------------- SEARCH person by ID --------------------------------------------------------
 app.get("/api/persons/:id", (request, response) => {
-    Person.findById(request.params.id).then(person => {
-        response.json(person)
-    })
+    Person.findById(request.params.id)
+        .then(person => {
+            if(!person){
+                return response.status(404).end()
+            }
+            response.json(person)
+        })
+        .catch(error =>{
+            next(error)
+        })
 })
 
-
+// ------------------------------------------------------ DELETE person ------------------------------------------------------
 app.delete("/api/persons/:id", (request, response) => {
-    Person.findByIdAndDelete(request.params.id).then(result => {
-        console.log("ID: ", request.params.id)
-        response.status(204).end()
-    })
+    Person.findByIdAndDelete(request.params.id)
+        .then(result => {
+            console.log("ID: ", request.params.id)
+            response.status(204).end()
+        })
+        .catch(error =>{
+            next(error)
+        })
     
 })
 
+// ------------------------------------------------------ ADD person ------------------------------------------------------
 app.post("/api/persons", (request, response) => {
     const body = request.body
     if (!body.name || !body.number) {
@@ -70,7 +89,33 @@ app.post("/api/persons", (request, response) => {
     })
 })
 
+// ------------------------------------------ CHANGE existing person's phonenubmer ------------------------------------------
+app.put("/api/persons/:id", (request, response, next) => {
+    const body = request.body
+    Person.findById(request.params.id)
+        .then(person => {
+            person.number = body.number
+            person.save()
+                .then(savedChange => {
+                    response.json(savedChange)
+                })
 
+        })
+        .catch(error => {
+            next(error)
+        })
+})
+
+
+// ---------------------------------------------------- ERROR HANDLING ----------------------------------------------------
+const errorHandler = (error, request, response, next ) => {
+    console.error(error.message)
+    if(error.name === "CastError"){
+        return response.status(400).send({error: "malformatted id"})
+    }
+}
+
+app.use(errorHandler)
 const PORT = process.env.PORT
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
