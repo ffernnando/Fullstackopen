@@ -20,16 +20,16 @@ const noteSchema = new mongoose.Schema({
 
 const Note = mongoose.model('Note', noteSchema)
 
-const note = new Note({
+/* const note = new Note({
   content: 'Trvth nvke',
   important: true,
-})
+}) */
 
-Note.find({important: true}).then(result => {
-    result.forEach(note => {
-        console.log(note)
-    })
-    mongoose.connection.close()
+Note.find({ important: true }).then(result => {
+  result.forEach(note => {
+    console.log(note)
+  })
+  mongoose.connection.close()
 })
 
 
