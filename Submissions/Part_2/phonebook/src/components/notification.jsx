@@ -1,4 +1,3 @@
-import { useState } from "react";
 
 const Notification = ({message, type}) => {
     let notifStyle = {

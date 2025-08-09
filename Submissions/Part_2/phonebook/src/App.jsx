@@ -2,10 +2,10 @@ import { useState, useEffect } from 'react'
 import Persons from './components/persons';
 import Filter from './components/filter';
 import PersonForm from './components/personform';
-import axios from 'axios';
 import Notification from './components/notification';
-
 import personServices from './services/persons';
+
+
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -26,6 +26,13 @@ const App = () => {
 
   const shownPersons = (newFilter != "") ? persons.filter(person => person.name.toLowerCase().includes(newFilter.toLowerCase())) : persons;
 
+  const showNotif = (notifContent, notifType) => {
+    setNewNotification({message: notifContent, type: notifType});
+    setTimeout(() => {
+      setNewNotification({message: null, type: null});
+    }, 5000);
+  }
+
   //onSubmit event handler
   const handleFormSubmit = (event) => {
     event.preventDefault();
@@ -37,10 +44,7 @@ const App = () => {
           .changePerson(copy.id, copy)
           .then(response => {
             setPersons(persons.map(person => person.id === response.id ? response : person));
-            setNewNotification({message: `Changed ${copy.name}'s phone number to ${copy.number}`, type: "change"});
-            setTimeout(() => {
-              setNewNotification({message:null, type: null});
-            }, 5000);
+            showNotif(`Changed ${copy.name}'s phone number to ${copy.number}`, "change")
           });
       }
     }else{
@@ -49,13 +53,18 @@ const App = () => {
         .addNew(personObject)
         .then(response => {
           setPersons(persons.concat(response));
-          setNewNotification({message: `Added ${response.name}`, type: "add"});
-          setTimeout(() => {
-              setNewNotification({message: null, type: null});
-            }, 5000);
+          showNotif(`Added ${response.name}`, 'add')
+
           setNewName("");
           setNewNumber("");
-        });
+        })
+        .catch(error => {
+          console.log("HELLO THERE! ", error.response.data.error)
+          showNotif(error.response.data.error, 'error')
+
+          setNewName("");
+          setNewNumber("");
+        })
     }
   }
 
@@ -77,24 +86,16 @@ const App = () => {
     if(window.confirm(`Delete ${persons.find(person => person.id === id).name} ?`)){
       personServices
         .removePerson(id)
-        .then(response => {
+        .then(() => {
           setPersons(persons.filter(person => person.id !== id));
-          setNewNotification({message: `Deleted ${name}`, type: "delete"});
-          setTimeout(() => {
-              setNewNotification({message: null, type: null});
-            }, 5000);
+          showNotif(`Deleted ${name}`, 'delete')
         })
         .catch( () => {
-          setNewNotification({message: `Information of ${name} has already been removed from server`, type: "delete"});
+          showNotif(`Information of ${name} has already been removed from server`, 'delete')
           setPersons(persons.filter(person => person.id !== id));
-          setTimeout(() => {
-            setNewNotification({message: null, type: null});
-          }, 5000)
         });
     }
   };
-
-
   
   return (
     <div>
