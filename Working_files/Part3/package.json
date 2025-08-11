@@ -5,17 +5,19 @@
   "scripts": {
     "build:ui": "rmdir /s /q dist && cd ../Part2/examples_2a && npm install && npm run build && xcopy dist ../../Part3/dist /E /I /Y",
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push",
-    "start": "node index.js",
-    "dev": "node --watch index.js",
-    "test": "node --test",
+    "start": "cross-env NODE_ENV=production node index.js",
+    "dev": "cross-env NODE_ENV=development node --watch index.js",
+    "test": "cross-env NODE_ENV=test node --test",
     "lint": "eslint ."
   },
   "author": "Fernando CarLegenda",
   "license": "IDC",
   "description": "",
   "dependencies": {
+    "cross-env": "^10.0.0",
     "dotenv": "^17.2.1",
-    "express": "^5.1.0",
+    "express": "^4.21.2",
+    "express-async-errors": "^3.1.1",
     "mongoose": "^8.17.0"
   },
   "devDependencies": {
