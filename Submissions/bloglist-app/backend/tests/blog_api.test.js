@@ -115,6 +115,35 @@ describe('Tests related to creating new blogs', () => {
   })
 })
 
+describe('DELETE and UPDATE', () => {
+  test('delete a single blog post', async () => {
+    const blogs = await blogsInDb()
+    const id = blogs[0].id
+    //console.log("ID: ", id)
+    await api
+      .del(`/api/blogs/${id}`)
+      .expect(204)
+    const blogsAfter = await blogsInDb()
+    //console.log("BLOGS AFTER: ", blogsAfter.length, " | BLOGS BEFORE: ", blogs.length)
+    assert(blogsAfter.lengt !== blogs.length)
+  })
+
+  test("update blog post's likes", async () => {
+    const blogs = await blogsInDb()
+    const id = blogs[0].id
+    console.log("Blog pre update: ", blogs[0])
+    await api
+      .put(`/api/blogs/${id}`)
+      .send({ likes: 500 })
+      .expect(201)
+
+    const updatedBlog = await Blog.findById(id)
+    //console.log("Updated blog: ", updatedBlog)
+    //console.log("Prev likes: ", blogs[0].likes, " | UPDATED likes: ", updatedBlog.likes)
+    assert(blogs[0].likes !== updatedBlog.likes)
+  })
+})
+
 after(async () => {
   mongoose.connection.close()
 })
