@@ -4,8 +4,9 @@ const supertest = require('supertest')
 
 const mongoose = require('mongoose')
 const Blog = require('../models/blog')
+const User = require('../models/user')
 const app = require('../app')
-const { blogList, blogsInDb } = require('./blog_list')
+const { blogList, blogsInDb, addDefaultUser, usersInDb } = require('./blog_list')
 
 const api = supertest(app)
 
@@ -131,7 +132,7 @@ describe('DELETE and UPDATE', () => {
   test("update blog post's likes", async () => {
     const blogs = await blogsInDb()
     const id = blogs[0].id
-    console.log("Blog pre update: ", blogs[0])
+    //console.log("Blog pre update: ", blogs[0])
     await api
       .put(`/api/blogs/${id}`)
       .send({ likes: 500 })
@@ -143,6 +144,31 @@ describe('DELETE and UPDATE', () => {
     assert(blogs[0].likes !== updatedBlog.likes)
   })
 })
+
+describe('tests related to users', () => {
+  beforeEach(async () => {
+    await User.deleteMany({})
+    await addDefaultUser()
+    console.log("AFTER ADDING DEFAULT: ", await User.find({}))
+  })
+
+  test('username must be unique', async () => {
+    const userCount = (await usersInDb()).length
+    const newUser = {
+      username: "NPC",
+      password: "thisPasswordIsUnique",
+      name: "Jeffrey"
+    }
+    await api.post('/api/users/')
+      .send(newUser)
+      .expect(500)
+
+    const newUserCount = (await usersInDb()).length
+    assert.strictEqual(userCount, newUserCount)
+  })
+})
+
+//--------------------------------------------------------------------------------------------------------
 
 after(async () => {
   mongoose.connection.close()
