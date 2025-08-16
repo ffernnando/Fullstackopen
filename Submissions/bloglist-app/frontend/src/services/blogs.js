@@ -19,6 +19,7 @@ const getOne = async (id) => {
 const createNew = async (blog) => {
   const config = { headers: { Authorization: token } }
   const response = await axios.post(baseUrl, blog, config)
+  console.log(response.data)
   return response.data
 }
 

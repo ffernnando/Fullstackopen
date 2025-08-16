@@ -43,10 +43,21 @@ const App = () => {
     }, 5000)
   }
 
+  const createBlog = async (title, author, url) => {
+    try{
+      const newBlog = { title: title, author: author, url: url }
+      const createdBlog = await blogService.createNew(newBlog)
+      setBlogs(blogs.concat(createdBlog))
+      showNotification(`a new blog ${newBlog.title} by ${newBlog.author} added`)
+    } catch (exception) {
+      console.log(exception)
+      showNotification('error creating a new blog')
+    }
+  }
   return (
     <div>
       <Notification ref={notifRef}/>
-      { user === null 
+      { user === null
         ? <div>
             <Togglable buttonLabel="login">
               <LoginForm setUser={setUser} showNotification={showNotification} />
@@ -59,7 +70,7 @@ const App = () => {
             
             <hr></hr>
             <Togglable buttonLabel="new note">
-              <AddNewBlogForm blogs={blogs} setBlogs={setBlogs} showNotification={showNotification} /> 
+              <AddNewBlogForm createBlog={createBlog}/>
             </Togglable>
           </div>
        }

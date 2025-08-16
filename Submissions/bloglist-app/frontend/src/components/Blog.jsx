@@ -1,24 +1,10 @@
-import { useEffect, useState } from "react"
-import blogService from "../services/blogs"
+import { useState } from "react"
 
-
-const Blog = ({ blog, setBlogs, blogs }) => {
+const Blog = ({ blog, setBlogs, blogs, blogService}) => {
   const [detailsVisible, setDetailVisibility] = useState(false)
-  const [user, setUser] = useState(null)
-  const [likes, setLikes] = useState(null)
-  
+
   const buttonLabel = detailsVisible ? 'hide' : 'view'
   const detailsStyle = { display: detailsVisible ? '' : 'none' }
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const result = await blogService.getOne(blog.id)
-      setUser(result.user.name)
-      setLikes(blog.likes)
-    }
-    fetchData()
-  }, [])
-
 
   const blogStyle = {
     paddingTop: 10,
@@ -34,32 +20,34 @@ const Blog = ({ blog, setBlogs, blogs }) => {
 
   const handleLikeClick = async () => {
     const updatedBlog = await blogService.changeLikes(blog)
-    setBlogs(blogs.map(b => b.id === blog.id ? updatedBlog : b))
+    setBlogs(blogs.map(b =>
+      b.id === blog.id ? { ...updatedBlog, user: blog.user } : b
+    ))
   }
 
   const handleRemoveClick = async () => {
     if(!window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)){
-      return null
+      return
     }
-    const res = await blogService.deleteOne(blog)
-    const newBlogs = blogs.filter(x => x.id !== blog.id)
-    setBlogs(newBlogs)
-    console.log('RES: ', res)
+    await blogService.deleteOne(blog)
+    setBlogs(blogs.filter(x => x.id !== blog.id))
   }
 
   return(
     <div style={ blogStyle }>
-      { blog.title } { blog.author } 
-      <button onClick={ handleDetails }> { buttonLabel } </button> <br/>
-      <div style={detailsStyle}>
+      <div className="alwaysVisible">
+        { blog.title } { blog.author }
+        <button onClick={ handleDetails } id="detailsBtn"> { buttonLabel } </button> <br/>
+      </div>
+
+      <div style={detailsStyle} className="togglableVisibility">
         { blog.url } <br/>
         likes: { blog.likes } <button onClick={handleLikeClick}>like</button> <br/>
-        { user } <br/>
+        { blog.user?.name } <br/>
         <button onClick={handleRemoveClick}>remove</button>
       </div>
-      
-    </div> 
-  ) 
+    </div>
+  )
 }
 
 export default Blog
