@@ -1,7 +1,6 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import Note from './Note'
-import { test, expect, vi } from "vitest";
-import userEvent from "@testing-library/user-event";
 
 test('renders content', () => {
   const note = {
@@ -9,23 +8,21 @@ test('renders content', () => {
     important: true
   }
 
-  
-  render(<Note note={ note } />)
+  render(<Note note={note} />)
+
   const element = screen.getByText('Component testing is done with react-testing-library')
-  screen.debug(element)
-  
-  expect(element).toBeDefined()
 })
 
-test('clicking the button calls event handle ronce', async () => {
+test('clicking the button calls event handler once', async () => {
   const note = {
     content: 'Component testing is done with react-testing-library',
     important: true
   }
 
   const mockHandler = vi.fn()
+
   render(
-    <Note note={note} toggleImportance={mockHandler}/>
+    <Note note={note} toggleImportance={mockHandler} />
   )
 
   const user = userEvent.setup()

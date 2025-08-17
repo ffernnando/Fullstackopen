@@ -1,23 +1,22 @@
-import { render, screen } from "@testing-library/react";
-import { test, expect, describe, beforeEach } from "vitest";
-import userEvent from "@testing-library/user-event";
-import Togglable from "./Togglable";
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import Togglable from './Togglable'
 
 describe('<Togglable />', () => {
   let container
+
   beforeEach(() => {
-  ({ container } = render(
-    <Togglable buttonLabel="show...">
-      <div className="testDiv">
-        togglable content
-      </div>
-    </Togglable>
-  ))
-})
+    container = render(
+      <Togglable buttonLabel="show...">
+        <div className="testDiv" >
+          togglable content
+        </div>
+      </Togglable>
+    ).container
+  })
 
-
-  test('renders its children', async () => {
-    await screen.findAllByText('togglable content')
+  test('renders its children', () => {
+    screen.getByText('togglable content')
   })
 
   test('at start the children are not displayed', () => {
@@ -36,6 +35,7 @@ describe('<Togglable />', () => {
 
   test('toggled content can be closed', async () => {
     const user = userEvent.setup()
+
     const button = screen.getByText('show...')
     await user.click(button)
 
@@ -45,5 +45,4 @@ describe('<Togglable />', () => {
     const div = container.querySelector('.togglableContent')
     expect(div).toHaveStyle('display: none')
   })
-
 })
