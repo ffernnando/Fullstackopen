@@ -6,7 +6,12 @@ import reducer from './reducer'
 
 const store = createStore(reducer)
 
+const generateId = () => {
+  Number(((Math.random() * 1000000)).toFixed(0))
+}
+
 const App = () => {
+  
   const good = () => {
     store.dispatch({
       type: 'GOOD'
