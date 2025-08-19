@@ -1,10 +1,17 @@
-import { useState } from "react"
+import { useEffect } from 'react'
+import { useState } from 'react'
 
-const Blog = ({ blog, setBlogs, blogs, blogService}) => {
+const Blog = ({ blog, setBlogs, blogs, blogService }) => {
   const [detailsVisible, setDetailVisibility] = useState(false)
-
+  const [nameOfUser, setNameOfUser] = useState('')
   const buttonLabel = detailsVisible ? 'hide' : 'view'
   const detailsStyle = { display: detailsVisible ? '' : 'none' }
+
+  useEffect(() => {
+    const name = JSON.parse(window.localStorage.getItem('loggedBlogappUser')).name
+    console.log(name)
+    setNameOfUser(name)
+  }, [])
 
   const blogStyle = {
     paddingTop: 10,
@@ -13,6 +20,7 @@ const Blog = ({ blog, setBlogs, blogs, blogService}) => {
     borderWidth: 1,
     marginBottom: 5
   }
+
 
   const handleDetails = () => {
     setDetailVisibility(!detailsVisible)
@@ -34,7 +42,7 @@ const Blog = ({ blog, setBlogs, blogs, blogService}) => {
   }
 
   return(
-    <div style={ blogStyle }>
+    <div style={ blogStyle } className='blogClass'>
       <div className="alwaysVisible">
         { blog.title } { blog.author }
         <button onClick={ handleDetails } id="detailsBtn"> { buttonLabel } </button> <br/>
@@ -44,7 +52,7 @@ const Blog = ({ blog, setBlogs, blogs, blogService}) => {
         { blog.url } <br/>
         likes: { blog.likes } <button onClick={handleLikeClick}>like</button> <br/>
         { blog.user?.name } <br/>
-        <button onClick={handleRemoveClick}>remove</button>
+        { nameOfUser === blog.user?.name ? <button onClick={handleRemoveClick}>remove</button> : <></> }
       </div>
     </div>
   )

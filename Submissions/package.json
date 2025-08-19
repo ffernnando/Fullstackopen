@@ -4,5 +4,9 @@
     "@stylistic/eslint-plugin-js": "^4.4.1",
     "eslint": "^9.33.0",
     "globals": "^16.3.0"
+  },
+  "dependencies": {
+    "redux": "^5.0.1",
+    "vite": "^7.1.3"
   }
 }

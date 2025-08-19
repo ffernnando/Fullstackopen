@@ -69,7 +69,7 @@ const App = () => {
             <BlogList blogs={blogs} setBlogs={setBlogs}/>
             
             <hr></hr>
-            <Togglable buttonLabel="new note">
+            <Togglable buttonLabel="new blog">
               <AddNewBlogForm createBlog={createBlog}/>
             </Togglable>
           </div>
