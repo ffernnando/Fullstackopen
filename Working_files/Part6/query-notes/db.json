@@ -1,0 +1,34 @@
+{
+  "notes": [
+    {
+      "content": "the app state is in redux store",
+      "important": false,
+      "id": "1"
+    },
+    {
+      "content": "state changes are made with actions",
+      "important": false,
+      "id": "2"
+    },
+    {
+      "id": "a13e",
+      "content": "new",
+      "important": false
+    },
+    {
+      "id": "039f",
+      "content": "bad",
+      "important": false
+    },
+    {
+      "id": "a004",
+      "content": "when a side nigga catches feelings",
+      "important": true
+    },
+    {
+      "id": "d3d8",
+      "content": "asas",
+      "important": true
+    }
+  ]
+}
