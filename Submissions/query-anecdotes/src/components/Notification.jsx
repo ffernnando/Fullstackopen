@@ -1,16 +1,16 @@
+import { useReducer, createContext, useContext } from 'react'
+import NotificationContext from '../NotificationContext'
+
 const Notification = () => {
-  const style = {
-    border: 'solid',
-    padding: 10,
-    borderWidth: 1,
-    marginBottom: 5
-  }
-  
-  if (true) return null
+  const notifContext = useContext(NotificationContext)
+  const content = notifContext.notification
+
+  let style = {}
+  content !== '' ? style = { border: 'solid', padding: 10, borderWidth: 1, marginBottom: 5 } : style = { display: 'none' }
 
   return (
     <div style={style}>
-      
+      {content}
     </div>
   )
 }
