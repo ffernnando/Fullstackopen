@@ -1,12 +1,12 @@
-import Blog from "./Blog"
-import blogService from "../services/blogs"
+import Blog from "./Blog";
+import blogService from "../services/blogs";
 
 const BlogList = ({ blogs, setBlogs }) => {
-  const sorted = [...blogs].sort((a, b) => b.likes - a.likes)
+  const sorted = [...blogs].sort((a, b) => b.likes - a.likes);
 
   return (
     <div>
-      { sorted.map(blog => (
+      {sorted.map((blog) => (
         <Blog
           key={blog.id}
           blog={blog}
@@ -16,7 +16,7 @@ const BlogList = ({ blogs, setBlogs }) => {
         />
       ))}
     </div>
-  )
-}
+  );
+};
 
-export default BlogList
+export default BlogList;

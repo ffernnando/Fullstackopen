@@ -1,27 +1,26 @@
-const User = require('../models/user')
-const userRouter = require('express').Router()
-const bcrypt = require('bcrypt')
+const User = require("../models/user");
+const userRouter = require("express").Router();
+const bcrypt = require("bcrypt");
 
+userRouter.get("/", async (request, response) => {
+  const users = await User.find({}).populate("blogs");
+  console.log(users);
+  response.status(200).json(users);
+});
 
-userRouter.get('/', async (request, response) => {
-  const users = await User.find({}).populate('blogs')
-  console.log(users)
-  response.status(200).json(users)
-})
-
-userRouter.post('/', async (request, response) => {
-  const body = request.body
-  if(body.password.length < 3 || body.password === undefined){
-    return response.status(400).end()
+userRouter.post("/", async (request, response) => {
+  const body = request.body;
+  if (body.password.length < 3 || body.password === undefined) {
+    return response.status(400).end();
   }
-  const passHash = await bcrypt.hash(body.password, 10)
+  const passHash = await bcrypt.hash(body.password, 10);
   const newUser = new User({
     username: body.username,
     passwordHash: passHash,
-    name: body.name
-  })
-  
-  response.status(201).json(await newUser.save())
-})
+    name: body.name,
+  });
 
-module.exports = userRouter
+  response.status(201).json(await newUser.save());
+});
+
+module.exports = userRouter;

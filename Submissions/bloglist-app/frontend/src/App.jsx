@@ -20,10 +20,9 @@ const App = () => {
     fetchBlogs()
   }, [])
 
-
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
-    if(loggedUserJSON){
+    if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
       blogService.setToken(user.token)
@@ -44,7 +43,7 @@ const App = () => {
   }
 
   const createBlog = async (title, author, url) => {
-    try{
+    try {
       const newBlog = { title: title, author: author, url: url }
       const createdBlog = await blogService.createNew(newBlog)
       setBlogs(blogs.concat(createdBlog))
@@ -56,24 +55,27 @@ const App = () => {
   }
   return (
     <div>
-      <Notification ref={notifRef}/>
-      { user === null
-        ? <div>
-            <Togglable buttonLabel="login">
-              <LoginForm setUser={setUser} showNotification={showNotification} />
-            </Togglable>
-          </div>
-        : <div>
-            <h2>blogs</h2>
-            <p>{ user.name } logged in <button onClick={ handleLogout }>logout</button></p>
-            <BlogList blogs={blogs} setBlogs={setBlogs}/>
-            
-            <hr></hr>
-            <Togglable buttonLabel="new blog">
-              <AddNewBlogForm createBlog={createBlog}/>
-            </Togglable>
-          </div>
-       }
+      <Notification ref={notifRef} />
+      {user === null ? (
+        <div>
+          <Togglable buttonLabel='login'>
+            <LoginForm setUser={setUser} showNotification={showNotification} />
+          </Togglable>
+        </div>
+      ) : (
+        <div>
+          <h2>blogs</h2>
+          <p>
+            {user.name} logged in <button onClick={handleLogout}>logout</button>
+          </p>
+          <BlogList blogs={blogs} setBlogs={setBlogs} />
+
+          <hr></hr>
+          <Togglable buttonLabel='new blog'>
+            <AddNewBlogForm createBlog={createBlog} />
+          </Togglable>
+        </div>
+      )}
     </div>
   )
 }
