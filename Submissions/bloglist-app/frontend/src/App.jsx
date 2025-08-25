@@ -1,24 +1,20 @@
-import { useState, useEffect, useRef } from 'react'
-import Blog from './components/Blog'
+import { useState, useEffect } from 'react'
 import blogService from './services/blogs'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import AddNewBlogForm from './components/BlogForm'
 import LoginForm from './components/LoginForm'
 import BlogList from './components/BlogList'
+import { useContext } from 'react'
+import NotificationContext from './NotificationContext'
+import { useQueryClient } from '@tanstack/react-query'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
+  const queryClient = useQueryClient()
+
   const [user, setUser] = useState(null)
 
-  const notifRef = useRef()
-
-  useEffect(() => {
-    const fetchBlogs = async () => {
-      setBlogs(await blogService.getAll())
-    }
-    fetchBlogs()
-  }, [])
+  const [notification, , showNotification] = useContext(NotificationContext)
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
@@ -35,31 +31,13 @@ const App = () => {
     showNotification('successfully logged out')
   }
 
-  const showNotification = (message) => {
-    notifRef.current.showMessage(message)
-    setTimeout(() => {
-      notifRef.current.showMessage(null)
-    }, 5000)
-  }
-
-  const createBlog = async (title, author, url) => {
-    try {
-      const newBlog = { title: title, author: author, url: url }
-      const createdBlog = await blogService.createNew(newBlog)
-      setBlogs(blogs.concat(createdBlog))
-      showNotification(`a new blog ${newBlog.title} by ${newBlog.author} added`)
-    } catch (exception) {
-      console.log(exception)
-      showNotification('error creating a new blog')
-    }
-  }
   return (
     <div>
-      <Notification ref={notifRef} />
+      <Notification notification={notification} />
       {user === null ? (
         <div>
           <Togglable buttonLabel='login'>
-            <LoginForm setUser={setUser} showNotification={showNotification} />
+            <LoginForm setUser={setUser} />
           </Togglable>
         </div>
       ) : (
@@ -68,11 +46,11 @@ const App = () => {
           <p>
             {user.name} logged in <button onClick={handleLogout}>logout</button>
           </p>
-          <BlogList blogs={blogs} setBlogs={setBlogs} />
+          <BlogList />
 
           <hr></hr>
           <Togglable buttonLabel='new blog'>
-            <AddNewBlogForm createBlog={createBlog} />
+            <AddNewBlogForm />
           </Togglable>
         </div>
       )}

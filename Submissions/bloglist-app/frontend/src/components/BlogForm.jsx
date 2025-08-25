@@ -1,56 +1,62 @@
-import { useState } from "react";
+import { useContext, useState } from 'react'
+import BlogContext from '../BlogContext'
 
-const AddNewBlogForm = ({ createBlog }) => {
-  const [title, setTitle] = useState("");
-  const [author, setAuthor] = useState("");
-  const [url, setUrl] = useState("");
+const AddNewBlogForm = () => {
+  const [, newBlogMutation, ,] = useContext(BlogContext)
+
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
 
   const handleCreateNew = (event) => {
-    event.preventDefault();
-    createBlog(title, author, url);
-    setTitle("");
-    setAuthor("");
-    setUrl("");
-  };
+    event.preventDefault()
+    //createBlog(title, author, url)
+
+    newBlogMutation.mutate(title, author, url)
+
+    setTitle('')
+    setAuthor('')
+    setUrl('')
+  }
 
   return (
     <form onSubmit={handleCreateNew}>
       <div>
-        title:{" "}
+        title:{' '}
         <input
-          data-testid="title"
-          type="text"
-          name="Title"
-          placeholder="Title..."
+          data-testid='title'
+          type='text'
+          name='Title'
+          placeholder='Title...'
           value={title}
           onChange={({ target }) => setTitle(target.value)}
         />
       </div>
       <div>
-        author:{" "}
+        author:{' '}
         <input
-          data-testid="author"
-          type="text"
-          name="Author"
-          placeholder="Author..."
+          data-testid='author'
+          type='text'
+          name='Author'
+          placeholder='Author...'
           value={author}
           onChange={({ target }) => setAuthor(target.value)}
         />
       </div>
       <div>
-        url:{" "}
+        url:{' '}
         <input
-          data-testid="url"
-          type="text"
-          name="Url"
-          placeholder="URL..."
+          data-testid='url'
+          type='text'
+          name='Url'
+          placeholder='URL...'
           value={url}
           onChange={({ target }) => setUrl(target.value)}
         />
       </div>
       <button>create</button>
     </form>
-  );
-};
+  )
+}
 
-export default AddNewBlogForm;
+export default AddNewBlogForm
