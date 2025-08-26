@@ -8,54 +8,57 @@ import BlogList from './components/BlogList'
 import { useContext } from 'react'
 import NotificationContext from './NotificationContext'
 import { useQueryClient } from '@tanstack/react-query'
+import UserContext from './UserContext'
+import { BrowserRouter as Router, Route, Routes, Link} from 'react-router-dom'
+import UserView from './views/UserView'
+import UserListView from './views/UserListView'
+import BlogView from './views/BlogView'
 
 const App = () => {
   const queryClient = useQueryClient()
+  const [user, getUser, , userLogout] = useContext(UserContext)
 
-  const [user, setUser] = useState(null)
-
-  const [notification, , showNotification] = useContext(NotificationContext)
+  const [notification, , ] = useContext(NotificationContext)
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      setUser(user)
-      blogService.setToken(user.token)
-    }
+    getUser()
   }, [])
 
-  const handleLogout = () => {
-    setUser(null)
-    window.localStorage.removeItem('loggedBlogappUser')
-    showNotification('successfully logged out')
-  }
-
   return (
-    <div>
+    <Router>
       <Notification notification={notification} />
       {user === null ? (
         <div>
           <Togglable buttonLabel='login'>
-            <LoginForm setUser={setUser} />
+            <LoginForm />
           </Togglable>
         </div>
       ) : (
         <div>
           <h2>blogs</h2>
           <p>
-            {user.name} logged in <button onClick={handleLogout}>logout</button>
+            {user.name} logged in <button onClick={userLogout}>logout</button>
           </p>
-          <BlogList />
-
-          <hr></hr>
-          <Togglable buttonLabel='new blog'>
-            <AddNewBlogForm />
-          </Togglable>
+          
         </div>
       )}
-    </div>
+      <UserListView />
+
+      <Routes>
+        <Route path='/users' element={<UserListView />} />
+        <Route path='/users/:id' element={<UserView />} />
+        <Route path='/blogs' element={<BlogView />} />
+      </Routes>
+    </Router>
   )
 }
+
+/*
+  <BlogList />
+  <hr></hr>
+  <Togglable buttonLabel='new blog'>
+    <AddNewBlogForm />
+  </Togglable>
+*/
 
 export default App

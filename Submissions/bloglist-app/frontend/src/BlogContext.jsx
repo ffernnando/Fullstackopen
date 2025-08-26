@@ -15,11 +15,14 @@ export const BlogContextProvider = (props) => {
     return response
   }
 
-  const { data: Blogs, isLoading, isError } = useQuery({
+  const {
+    data: Blogs,
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: ['blogs'],
     queryFn: fetchBlogs,
   })
-
 
   const createBlog = async (title, author, url) => {
     try {
@@ -86,7 +89,14 @@ export const BlogContextProvider = (props) => {
 
   return (
     <BlogContext.Provider
-      value={[Blogs, newBlogMutation, likeBlogMutation, deleteBlogMutation, isLoading, isError]}
+      value={[
+        Blogs,
+        newBlogMutation,
+        likeBlogMutation,
+        deleteBlogMutation,
+        isLoading,
+        isError,
+      ]}
     >
       {props.children}
     </BlogContext.Provider>

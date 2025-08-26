@@ -1,27 +1,17 @@
 import { useContext, useState } from 'react'
-import loginService from '../services/login'
-import blogService from '../services/blogs'
-import NotificationContext from '../NotificationContext'
+import UserContext from '../UserContext'
 
-const LoginForm = ({ setUser }) => {
+const LoginForm = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [, , showNotification] = useContext(NotificationContext)
+
+  const [, , userLogin] = useContext(UserContext)  
 
   const handleLogin = async (event) => {
     event.preventDefault()
-    try {
-      const result = await loginService.login(username, password)
-      console.log('RESULT DATA: ', result)
-      blogService.setToken(result.token)
-      setUser(result)
-      setUsername('')
-      setPassword('')
-      window.localStorage.setItem('loggedBlogappUser', JSON.stringify(result))
-      showNotification('successfully logged in')
-    } catch (exception) {
-      showNotification('error logging in')
-    }
+    userLogin(username, password)
+    setUsername('')
+    setPassword('')
   }
 
   return (
