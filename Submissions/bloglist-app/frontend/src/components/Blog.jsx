@@ -3,7 +3,8 @@ import { useState } from 'react'
 import BlogContext from '../BlogContext'
 
 const Blog = ({ blog }) => {
-  const [Blogs, newBlogMutation, likeBlogMutation, deleteBlogMutation] = useContext(BlogContext)
+  const [Blogs, newBlogMutation, likeBlogMutation, deleteBlogMutation] =
+    useContext(BlogContext)
 
   const [detailsVisible, setDetailVisibility] = useState(false)
   const [nameOfUser, setNameOfUser] = useState('')

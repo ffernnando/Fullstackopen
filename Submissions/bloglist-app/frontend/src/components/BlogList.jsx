@@ -1,8 +1,17 @@
 import Blog from './Blog'
 import BlogContext from '../BlogContext'
 import { useContext } from 'react'
+import { Link } from 'react-router-dom'
 
 const BlogList = () => {
+  const blogStyle = {
+    paddingTop: 10,
+    paddingLeft: 2,
+    border: 'solid',
+    borderWidth: 1,
+    marginBottom: 5,
+  }
+
   const [Blogs, , , , isLoading, isError] = useContext(BlogContext)
   console.log('Blogs: ', Blogs)
   if (isLoading) {
@@ -16,10 +25,13 @@ const BlogList = () => {
   return (
     <div>
       {sorted.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
+        //The to='...' path will need change when adding navbar so that the path will be relative to the blogs component etc. etc.
+        <Link to={`/blogs/${blog.id}`}>
+          <div style={blogStyle}>{blog.title}</div>
+        </Link>
       ))}
     </div>
   )
 }
-
+//<Blog key={blog.id} blog={blog} />
 export default BlogList
