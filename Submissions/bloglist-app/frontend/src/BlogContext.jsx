@@ -1,5 +1,5 @@
 import { useQueryClient, useQuery, useMutation } from '@tanstack/react-query'
-import { createContext, useContext, useEffect } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
 import blogService from './services/blogs'
 import NotificationContext from './NotificationContext'
 
@@ -8,6 +8,8 @@ const BlogContext = createContext()
 export const BlogContextProvider = (props) => {
   const queryClient = useQueryClient()
   const [, , showNotification] = useContext(NotificationContext)
+
+  const [selectedBlog, setSelectedBlog] = useState(null)
 
   const fetchBlogs = async () => {
     const response = await blogService.getAll()
@@ -24,12 +26,13 @@ export const BlogContextProvider = (props) => {
     queryFn: fetchBlogs,
   })
 
-  const createBlog = async (title, author, url) => {
+  const createBlog = async ({ title, author, url }) => {
     try {
       const newBlog = { title: title, author: author, url: url }
+      console.log('newBlog: ', newBlog)
       const createdBlog = await blogService.createNew(newBlog)
-      //setBlogs(Blogs.blogs.concat(createdBlog))
       showNotification(`a new blog ${newBlog.title} by ${newBlog.author} added`)
+      return createdBlog
     } catch (exception) {
       console.log(exception)
       showNotification('error creating a new blog')
@@ -61,6 +64,7 @@ export const BlogContextProvider = (props) => {
   const newBlogMutation = useMutation({
     mutationFn: createBlog,
     onSuccess: (newBlog) => {
+      console.log('NEWW BLOG: ', newBlog)
       queryClient.setQueryData(['blogs'], (oldBlogs) => {
         return [...oldBlogs, newBlog]
       })
@@ -96,6 +100,8 @@ export const BlogContextProvider = (props) => {
         deleteBlogMutation,
         isLoading,
         isError,
+        selectedBlog,
+        setSelectedBlog,
       ]}
     >
       {props.children}

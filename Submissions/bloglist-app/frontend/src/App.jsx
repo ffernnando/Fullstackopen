@@ -21,12 +21,13 @@ import NavBar from './components/NavBar'
 
 const App = () => {
   const queryClient = useQueryClient()
-  const [user, getUser, userLogin , userLogout] = useContext(UserContext)
+  const [user, getUser, userLogin, userLogout] = useContext(UserContext)
 
   const [notification, ,] = useContext(NotificationContext)
   const UserList = useContext(UserListContext)
 
-  const [Blogs] = useContext(BlogContext)
+  const [Blogs, , , , , , selectedBlog, setSelectedBlog] =
+    useContext(BlogContext)
 
   useEffect(() => {
     getUser()
@@ -34,36 +35,48 @@ const App = () => {
 
   const matchUserId = useMatch('/users/:id')
   const selectedUser = matchUserId
-    ? UserList.data.find(
+    ? UserList?.data.find(
         (u) => u.id.toString() === String(matchUserId.params.id)
       )
     : null
 
   const matchBlogId = useMatch('/blogs/:id')
-  const selectedBlog = matchBlogId
-    ? Blogs.find((b) => b.id === String(matchBlogId.params.id))
+  const newlySelectedBlog = matchBlogId
+    ? Blogs?.find((b) => b.id === String(matchBlogId.params.id))
     : null
 
+  useEffect(() => {
+    setSelectedBlog(newlySelectedBlog)
+  }, [newlySelectedBlog])
+  /*const selectedBlog = matchBlogId
+    ? Blogs?.find((b) => b.id === String(matchBlogId.params.id))
+    : null
+  */
+  console.log('selekkkted blog: ', selectedBlog)
+
   return (
-    <div>
-      <NavBar /> 
+    <div className='container'>
+      <NavBar />
       <Notification notification={notification} />
-      <h2 text-decoration="none"><Link to='/'>blog app</Link></h2>
-      {
-      !user 
-        ? '' 
-        : 
+      {!user ? (
+        ''
+      ) : (
         <div>
           <Routes>
             <Route path='/' element={<BlogListView />} />
             <Route path='/users' element={<UserListView />} />
-            <Route path='/users/:id' element={<UserView user={selectedUser} />} />
-            
-            <Route path='/blogs/:id' element={<BlogView blog={selectedBlog} />} />
+            <Route
+              path='/users/:id'
+              element={<UserView user={selectedUser} />}
+            />
+
+            <Route
+              path='/blogs/:id'
+              element={<BlogView blog={selectedBlog} />}
+            />
           </Routes>
-        </div> 
-      }
-      
+        </div>
+      )}
     </div>
   )
 }

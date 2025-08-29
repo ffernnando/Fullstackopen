@@ -1,4 +1,5 @@
 import axios from 'axios'
+
 const baseUrl = '/api/blogs'
 
 let token = null
@@ -36,4 +37,21 @@ const deleteOne = async (blog) => {
   return response.data
 }
 
-export default { getAll, setToken, createNew, getOne, changeLikes, deleteOne }
+const getCommentList = async (blog) => {
+  console.log('BLOGĆINA ID: ', blog.id)
+  const response = await axios.get(`${baseUrl}/${blog.id}/comments`)
+  console.log('getCommentList: ', response.data)
+  return response.data
+}
+
+const createComment = async ({blog, content}) => {
+  //console.log('BLOG WITHIN SERVICE: ', blog)
+  //console.log('CONTENT WITHIN SERVICE: ', content)
+  //console.log('path: ', `${baseUrl}/${blog.id}/comments` )
+  const config = { headers: { Authorization: token } }
+  const response = await axios.post(`${baseUrl}/${blog.id}/comments`, {blog, content}, config)
+  console.log('REZPONZ-DATA: ', response)
+  return response.data.comment
+}
+
+export default { getAll, setToken, createNew, getOne, changeLikes, deleteOne, createComment, getCommentList }

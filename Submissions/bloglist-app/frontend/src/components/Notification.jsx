@@ -1,5 +1,12 @@
-const Notification = ({notification}) => {
+import { Alert } from 'react-bootstrap'
+const Notification = ({ notification }) => {
   console.log('Notification: ', notification)
+
+  const variant = notification?.toLowerCase().includes('error')
+    ? 'danger'
+    : 'info'
+  console.log('variant: ', variant)
+
   const notifStyle = {
     background: 'lightgrey',
     fontSize: '20px',
@@ -10,7 +17,7 @@ const Notification = ({notification}) => {
   }
   if (!notification) return null
 
-  return <div style={notifStyle}>{notification}</div>
+  return <Alert variant={variant}> {notification} </Alert>
 }
 
 export default Notification

@@ -1,3 +1,4 @@
+import { ListGroup } from 'react-bootstrap'
 const UserView = ({ user }) => {
   // Add everything related to displaying details of a user - his blogs: use the match method thing to get the user's id
   // from the URL and then search the database via User.findById(...) or change the userRouter so that it populates the
@@ -10,11 +11,11 @@ const UserView = ({ user }) => {
     <div>
       <h2>{user.name}</h2>
       <h3>added blogs</h3>
-      <ul>
+      <ListGroup>
         {user.blogs.map((b) => (
-          <li>{b.title}</li>
+          <ListGroup.Item>{b.title}</ListGroup.Item>
         ))}
-      </ul>
+      </ListGroup>
     </div>
   )
 }

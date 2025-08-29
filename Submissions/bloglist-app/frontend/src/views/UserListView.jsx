@@ -5,6 +5,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
 import { useMatch } from 'react-router-dom'
 import UserListContext from '../UserListContex'
+import { Table } from 'react-bootstrap'
 
 const UserListView = () => {
   //const [user, getUser, userLogin, userLogout] = useContext(UserContext)
@@ -49,22 +50,25 @@ const UserListView = () => {
   return (
     <div>
       <h2>Users</h2>
-      <table>
-        <tr>
-          <td></td>
-          <td>
-            <b>blogs created</b>
-          </td>
-        </tr>
-        {UserList.data.map((u) => (
-          <tr key={u.key}>
+      <Table striped>
+        <tbody>
+          <tr>
+            <td></td>
             <td>
-              <Link to={`/users/${u.id}`}>{u.name}</Link>
+              <b>blogs created</b>
             </td>
-            <td>{u.blogs.length}</td>
           </tr>
-        ))}
-      </table>
+          {UserList.data.map((u) => (
+            <tr key={u.key}>
+              <td>
+                <Link to={`/users/${u.id}`}>{u.name}</Link>
+              </td>
+              <td>{u.blogs.length}</td>
+            </tr>
+          ))}
+        </tbody>
+        
+      </Table>
     </div>
   )
 }

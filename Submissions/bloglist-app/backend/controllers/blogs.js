@@ -1,6 +1,7 @@
 const blogRouter = require("express").Router();
 const Blog = require("../models/blog");
 const User = require("../models/user");
+const Comment = require('../models/comment')
 const jwt = require("jsonwebtoken");
 const { userExtractor } = require("../utils/middleware");
 
@@ -38,6 +39,37 @@ blogRouter.post("/", userExtractor, async (request, response) => {
   });
   response.status(201).json(foundBLog);
 });
+
+blogRouter.post('/:id/comments', async (request, response) => {
+   const { blog, content } = request.body
+   console.log('blog: ', blog)
+   console.log('content: ', content)
+   if(!content){
+    return response.status(400).json({error: `Can't submit empty comments!`})
+   }
+   const dbBlog = await Blog.findById(blog.id)
+   //console.log('blogs.js - dbBlog: ', dbBlog)
+
+   const comment = new Comment ({
+    content: content,
+    blog: dbBlog._id
+   })
+   const savedComment = await comment.save()
+   //console.log('blogs.js - savedComment: ', savedComment)
+
+   dbBlog.comments.push(savedComment._id)
+   const savedBlog = await dbBlog.save()
+   //console.log('blogs.js - savedBlog: ', savedBlog)
+
+   const populatedBlog = await savedBlog.populate('comments')
+   return response.status(201).json({ comment: savedComment, blog: populatedBlog})
+}) 
+
+blogRouter.get('/:id/comments', async (request, response) => {
+  const id = request.params.id
+  const comments = await Comment.find({blog: id})
+  return response.status(200).json(comments)
+})
 
 blogRouter.delete("/:id", userExtractor, async (request, response) => {
   const blog = await Blog.findById(request.params.id);

@@ -5,11 +5,15 @@ import Blog from '../components/Blog'
 import { useState, useEffect } from 'react'
 import { useContext } from 'react'
 import BlogContext from '../BlogContext'
+import Comments from '../components/Comments'
+import { Button } from 'react-bootstrap'
+import { useNavigate } from 'react-router-dom'
 
 const BlogView = ({ blog }) => {
   const [Blogs, newBlogMutation, likeBlogMutation, deleteBlogMutation] =
     useContext(BlogContext)
   const [nameOfUser, setNameOfUser] = useState('')
+  const navigate = useNavigate()
 
   useEffect(() => {
     const name = JSON.parse(
@@ -28,6 +32,7 @@ const BlogView = ({ blog }) => {
       return
     }
     deleteBlogMutation.mutate(blog)
+    navigate('/')
   }
 
   if (!blog) {
@@ -42,16 +47,22 @@ const BlogView = ({ blog }) => {
       <div>{blog.url}</div>
       <div>
         {blog.likes} Likes
-        <button onClick={handleLikeClick}>Like</button>
+        <Button onClick={handleLikeClick} style={{ marginLeft: '1em' }}>
+          Like
+        </Button>
       </div>
-      <div>{blog.user ? `Added by ${blog.user?.name}` : ''}</div>
       <div>
+        {blog.user ? `Added by ${blog.user?.name}` : ''}
+
         {nameOfUser === blog.user?.name ? (
-          <button onClick={handleRemoveClick}>remove</button>
+          <Button onClick={handleRemoveClick} style={{ marginLeft: '1em' }}>
+            remove
+          </Button>
         ) : (
           ' '
         )}
       </div>
+      <Comments blog={blog} />
     </div>
   )
 }
