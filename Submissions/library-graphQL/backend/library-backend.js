@@ -131,12 +131,12 @@ const typeDefs = `
     addBook(
       title: String!
       author: String
-      published: Int!
+      published: String!
       genres: [String!]!
     ): Book
     editAuthor(
       name: String!,
-      setBornTo: Int!
+      setBornTo: String!
     ): Author
   }
 `
@@ -163,12 +163,7 @@ const resolvers = {
       }
       return bookList
     },
-    allAuthors: () => {
-      return authors.map(a => {
-        const bookCount = books.filter(b => b.author === a.name).length
-        return { ...a, bookCount }
-      })
-    },
+    allAuthors: () => authors,
   },
   Mutation: {
     addBook: (root, args) => {
@@ -189,6 +184,9 @@ const resolvers = {
       authors = authors.filter(a => a.name !== name).concat(newAuthor)
       return newAuthor
     }
+  },
+  Author: {
+    bookCount: (root) => books.filter(b => b.author === root.name).length
   }
 }
 
