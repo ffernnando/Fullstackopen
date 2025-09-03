@@ -12,7 +12,7 @@ import { useState } from 'react'
   }
 ` */
 
-const Authors = (props) => {
+const Authors = () => {
   const result = useQuery(ALL_AUTHORS)
   const [updateAuthor] = useMutation(UPDATE_AUTHOR, {
     refetchQueries: [{ query: ALL_AUTHORS }, { query: ALL_BOOKS }],
@@ -29,10 +29,6 @@ const Authors = (props) => {
 
     setName('')
     setBorn('')
-  }
-
-  if (!props.show) {
-    return null
   }
 
   if (result.loading) {

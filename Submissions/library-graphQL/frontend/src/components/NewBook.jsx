@@ -50,10 +50,6 @@ const NewBook = (props) => {
     setGenre('')
   }
 
-  if (!props.show) {
-    return null
-  }
-
   const addGenre = () => {
     setGenres(genres.concat(genre))
     console.log('genres: ', genres)

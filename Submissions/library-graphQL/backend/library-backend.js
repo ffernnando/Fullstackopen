@@ -152,7 +152,7 @@ const typeDefs = `
     authorCount: Int!
     allBooks(author: String, genre: String): [Book!]!
     allAuthors: [Author!]!
-    me: User
+    me: User!
   }
 
   type Mutation {
@@ -277,6 +277,8 @@ const resolvers = {
 
       try {
         const resAuth = await newAuthor.save()
+        console.log('resAuth: ', resAuth)
+        return resAuth
       } catch (error) {
         throw new GraphQLError('Saving changes failed', {
           extensions: {
@@ -286,8 +288,6 @@ const resolvers = {
           }
         })
       }
-      console.log('resAuth: ', resAuth)
-      return resAuth
     },
 
     createUser: async (root, args) => {

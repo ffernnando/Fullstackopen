@@ -1,29 +1,59 @@
-import { gql, useQuery } from "@apollo/client"
-import { ALL_BOOKS } from "../queries"
+import { gql, useQuery } from '@apollo/client'
+import { ALL_BOOKS } from '../queries'
+import { useEffect, useState } from 'react'
 
-/* const ALL_BOOKS = gql`
-  query{
-    allBooks{
-      title
-      author
-      published
+const Books = () => {
+  const books = useQuery(ALL_BOOKS).data?.allBooks
+  const [genres, setGenres] = useState([])
+  const [selectedGenre, setSelectedGenre] = useState('')
+  const [selectedBooks, setSelectedBooks] = useState([])
+
+  console.log('books: ', books)
+
+  //Neka nije v redu z ovim, trebaš dodati još stvarnu logiku za filtriranje - nabaciš useState filtered books i
+  //tam ih pohraniš i ako nije null onda displayaš njih, a inače sve - books. Nemam blage ali dok se kao hotloada
+  //i refresha kod onda se dodaju ovi žanrovi ali nemam blage
+  useEffect(() => {
+    if (books) {
+      const genres = []
+      books?.forEach((b) => {
+        console.log('Inside first foreach')
+        b.genres.forEach((g) => {
+          console.log('Inside second foreach')
+          if (!genres.includes(g)) {
+            genres.push(g)
+          }
+        })
+      })
+      setGenres(genres)
+    } else {
+      console.log('Books stil not loaded...')
     }
-  }
-` */
+  }, [books])
 
-const Books = (props) => {
-  const result = useQuery(ALL_BOOKS)
+  useEffect(() => {
+    if (selectedGenre) {
+      const filteredBooks = books.filter((b) =>
+        b.genres.includes(selectedGenre)
+      )
+      setSelectedBooks(filteredBooks)
+    } else {
+      setSelectedBooks(books)
+    }
+  }, [books, selectedGenre])
 
-  if (!props.show) {
-    return null
+  const handleFilterClick = ({ target }) => {
+    const genre = target.value
+    setSelectedGenre(genre)
+    console.log('Clicked: ', selectedGenre)
   }
-  
-  if (result.loading) {
+
+  if (!selectedBooks) {
+    console.log('loading!')
     return <div>Loading...</div>
   }
-
-  const books = result.data.allBooks
-
+  console.log('this happens!')
+  console.log('Genres: ', genres)
   return (
     <div>
       <h2>books</h2>
@@ -35,15 +65,26 @@ const Books = (props) => {
             <th>author</th>
             <th>published</th>
           </tr>
-          {books.map((a) => (
+          {selectedBooks.map((a) => (
             <tr key={a.title}>
               <td>{a.title}</td>
-              <td>{a.author}</td>
+              <td>{a.author.name}</td>
               <td>{a.published}</td>
             </tr>
           ))}
         </tbody>
       </table>
+      <div>
+        {!genres ? (
+          <></>
+        ) : (
+          genres.map((g) => (
+            <button key={g} onClick={handleFilterClick} value={g}>
+              {g}
+            </button>
+          ))
+        )}
+      </div>
     </div>
   )
 }
