@@ -1,12 +1,16 @@
 import { gql, useQuery } from '@apollo/client'
-import { ALL_BOOKS } from '../queries'
+import { ALL_BOOKS, BOOKS_BY_GENRE } from '../queries'
 import { useEffect, useState } from 'react'
 
 const Books = () => {
   const books = useQuery(ALL_BOOKS).data?.allBooks
   const [genres, setGenres] = useState([])
   const [selectedGenre, setSelectedGenre] = useState('')
-  const [selectedBooks, setSelectedBooks] = useState([])
+  //const [selectedBooks, setSelectedBooks] = useState([])
+  const filteredBooks = useQuery(BOOKS_BY_GENRE, {
+    variables: { genre: selectedGenre },
+  }).data?.booksByGenre
+  console.log('filteredBooks: ', filteredBooks)
 
   console.log('books: ', books)
 
@@ -17,9 +21,7 @@ const Books = () => {
     if (books) {
       const genres = []
       books?.forEach((b) => {
-        console.log('Inside first foreach')
         b.genres.forEach((g) => {
-          console.log('Inside second foreach')
           if (!genres.includes(g)) {
             genres.push(g)
           }
@@ -31,24 +33,13 @@ const Books = () => {
     }
   }, [books])
 
-  useEffect(() => {
-    if (selectedGenre) {
-      const filteredBooks = books.filter((b) =>
-        b.genres.includes(selectedGenre)
-      )
-      setSelectedBooks(filteredBooks)
-    } else {
-      setSelectedBooks(books)
-    }
-  }, [books, selectedGenre])
-
   const handleFilterClick = ({ target }) => {
     const genre = target.value
-    setSelectedGenre(genre)
+    selectedGenre === genre ? setSelectedGenre('') : setSelectedGenre(genre)
     console.log('Clicked: ', selectedGenre)
   }
 
-  if (!selectedBooks) {
+  if (!filteredBooks) {
     console.log('loading!')
     return <div>Loading...</div>
   }
@@ -65,7 +56,7 @@ const Books = () => {
             <th>author</th>
             <th>published</th>
           </tr>
-          {selectedBooks.map((a) => (
+          {filteredBooks.map((a) => (
             <tr key={a.title}>
               <td>{a.title}</td>
               <td>{a.author.name}</td>

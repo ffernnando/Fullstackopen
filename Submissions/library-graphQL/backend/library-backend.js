@@ -152,6 +152,7 @@ const typeDefs = `
     authorCount: Int!
     allBooks(author: String, genre: String): [Book!]!
     allAuthors: [Author!]!
+    booksByGenre(genre: String!): [Book!]!
     me: User!
   }
 
@@ -162,6 +163,7 @@ const typeDefs = `
       published: String!
       genres: [String!]!
     ): Book
+
     editAuthor(
       name: String!,
       setBornTo: String!
@@ -199,6 +201,12 @@ const resolvers = {
     me: (root, args, context) => {
       return context.currentUser
     },
+    booksByGenre: async (root, args) => {
+      console.log('agrs.genre: ', args.genre)
+      const bookList = args.genre ? await Book.find({ genres: args.genre }) : await Book.find({})
+      console.log('bookList: ', bookList)
+      return Promise.all(bookList.map(async b => b.populate('author'))) 
+    }
   },
   Mutation: {
     addBook: async (root, args, context) => {

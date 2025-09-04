@@ -1,31 +1,20 @@
 import { useQuery } from '@apollo/client'
-import { ALL_BOOKS } from '../queries'
-import { useEffect, useState } from 'react'
+import { ALL_BOOKS, BOOKS_BY_GENRE } from '../queries'
 import { CURRENT_USER } from '../queries'
-import { useNavigate } from 'react-router-dom'
 
 const Recommendations = () => {
-  const books = useQuery(ALL_BOOKS).data?.allBooks
-  const [recommendedBooks, setRecommendedBooks] = useState([])
   const user = useQuery(CURRENT_USER).data?.me
-  const navigate = useNavigate()
+  const books = useQuery(ALL_BOOKS).data?.allBooks
 
-  useEffect(() => {
-    if (books) {
-      console.log('favoriteGenre: ', user.favoriteGenre)
-      const filteredBooks = books.filter((b) =>
-        b.genres.includes(user.favoriteGenre)
-      )
-      console.log('filteredBooks: ', filteredBooks)
-      setRecommendedBooks(filteredBooks)
-    }
-  }, books)
+  const filteredBooks = useQuery(BOOKS_BY_GENRE, {
+    variables: { genre: user?.favoriteGenre },
+  }).data?.booksByGenre
 
   if (!user) {
     return <div> Loading... </div>
   }
 
-  if (!recommendedBooks) {
+  if (!filteredBooks) {
     return <div> Loading... </div>
   }
   console.log('user: ', user)
@@ -46,8 +35,7 @@ const Recommendations = () => {
           </tr>
         </thead>
         <tbody>
-          {recommendedBooks.map((rb) => {
-            
+          {filteredBooks.map((rb) => {
             return (
               <tr key={rb.title}>
                 <td>{rb.title}</td>
