@@ -14,9 +14,6 @@ const Books = () => {
 
   console.log('books: ', books)
 
-  //Neka nije v redu z ovim, trebaš dodati još stvarnu logiku za filtriranje - nabaciš useState filtered books i
-  //tam ih pohraniš i ako nije null onda displayaš njih, a inače sve - books. Nemam blage ali dok se kao hotloada
-  //i refresha kod onda se dodaju ovi žanrovi ali nemam blage
   useEffect(() => {
     if (books) {
       const genres = []
