@@ -1,6 +1,6 @@
 
 export const validateAndCalculate = (args: string[]) => {
-  console.log('height: ', args[0], ' | weight: ', args[1])
+  console.log('height: ', args[0], ' | weight: ', args[1]);
   if (args[0] === 'undefined' || args[1] === 'undefined') {
     console.log('this is happening');
     throw new Error('Incomplete parameters!');
@@ -8,9 +8,9 @@ export const validateAndCalculate = (args: string[]) => {
   
   const { height, weight } = validateInputs(['', '', ...args]);
   return calculateBmi(height, weight);  
-}
+};
 
-export const validateInputs = (args: string[]) => {
+const validateInputs = (args: string[]) => {
   if (args.length !== 4) {
     throw new Error('Invalid input argument count!');
   }
@@ -18,13 +18,13 @@ export const validateInputs = (args: string[]) => {
     return {
       height: Number(args[2]),
       weight: Number(args[3])
-    }
+    };
   } else {
     throw new Error('At least one of the arguments is of an invalid type!');
   }
-}
+};
 
-export const calculateBmi = (height: number, weight: number): string => {
+const calculateBmi = (height: number, weight: number): string => {
   
   const bmi: number = weight / (Math.pow(height/100, 2));
   console.log('bmi: ', bmi);
@@ -39,7 +39,7 @@ export const calculateBmi = (height: number, weight: number): string => {
     status = 'Obese';
   }
   return status;
-}
+};
 
 if (require.main === module) {
   try {
@@ -48,9 +48,9 @@ if (require.main === module) {
   } catch (error: unknown) {
     let errorMessage = 'Something bad happened: ';
     if (error instanceof Error) {
-      errorMessage += error.message
+      errorMessage += error.message;
     }
-    console.log(errorMessage)
+    console.log(errorMessage);
   }
 }
 

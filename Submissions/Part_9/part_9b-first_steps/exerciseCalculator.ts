@@ -1,13 +1,3 @@
-interface exercisesResult {
-  periodLength: number;
-  trainingDays: number;
-  success: boolean;
-  rating: number;
-  ratingDescription: string;
-  target: number;
-  average: number;
-}
-
 interface inputs {
   targetExerciseTime: number;
   dailyExerciseTimes: number[];
@@ -17,7 +7,7 @@ const parseArguments = (args: string[]): inputs => {
   if (args.length < 4) {
     throw new Error('Too few arguments!');
   }
-  let dailyExerciseTimes: number[] = []
+  const dailyExerciseTimes: number[] = [];
   
   for (let i = 2; i < args.length; i++) {
     if (isNaN(Number(args[i]))) {
@@ -32,11 +22,11 @@ const parseArguments = (args: string[]): inputs => {
   return {
     targetExerciseTime,
     dailyExerciseTimes
-  }
+  };
 
-}
+};
 
-const calculateExercises = (dailyTime: number[], targetTime: number) => {
+export const calculateExercises = (dailyTime: number[], targetTime: number) => {
   const totalTime: number = dailyTime.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
   const average: number = totalTime / dailyTime.length;
   let rating: number;
@@ -64,8 +54,8 @@ const calculateExercises = (dailyTime: number[], targetTime: number) => {
     ratingDescription,
     target: targetTime,
     average
-  }
-}
+  };
+};
 
 try {
   const { targetExerciseTime, dailyExerciseTimes } = parseArguments(process.argv);
@@ -75,5 +65,5 @@ try {
   if (error instanceof Error) {
     errorMessage += error.message;
   }
-  console.log(errorMessage)
+  console.log(errorMessage);
 }
