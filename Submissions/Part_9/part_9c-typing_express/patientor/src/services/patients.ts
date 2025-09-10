@@ -7,7 +7,7 @@ const getAll = async () => {
   const { data } = await axios.get<Patient[]>(
     `${apiBaseUrl}/patients`
   );
-
+  console.log('DATA: ', data);
   return data;
 };
 
