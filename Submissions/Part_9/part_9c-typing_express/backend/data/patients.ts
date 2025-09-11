@@ -1,5 +1,5 @@
 import { Patient } from "../src/types";
-import toNewPatient from "../src/utils";
+import { NewPatientSchema } from "../src/utils";
 
 const data = [
     {
@@ -45,8 +45,11 @@ const data = [
 ];
 
 const patientData: Patient[] = data.map(d => {
-    const object = toNewPatient(d) as Patient;
-    object.id = d.id;
+    const temp = NewPatientSchema.parse(d);
+    const object: Patient = {
+        id: d.id,
+        ...temp
+    };
     return object;
 });
 
