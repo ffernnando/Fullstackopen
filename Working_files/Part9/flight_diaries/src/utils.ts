@@ -1,5 +1,7 @@
+import { NextFunction, Request } from "express";
 import { NewDiaryEntry, Visibility, Weather } from "./types";
-
+import  z  from 'zod';
+/*
 const isString = (text: unknown): text is string => {
   return typeof text === 'string' || text instanceof String;
 };
@@ -36,30 +38,20 @@ const parseWeather = (weather: unknown): Weather => {
   }
   return weather;
 };
+*/
 
-const parseVisibility = (visibility: unknown): Visibility => {
-  if (!isString(visibility) || !isVisibility(visibility)) {
-    throw new Error('Incorrect or missing visibility: ' + visibility);
+export const newEntrySchema = z.object({
+  weather: z.enum(Weather),
+  visibility: z.enum(Visibility),
+  date: z.string().date(),
+  comment: z.string().optional()
+});
+
+export const newDiaryParser = (req: Request, _res: Response, next: NextFunction) => { 
+  try {
+    newEntrySchema.parse(req.body);
+    next();
+  } catch (error: unknown) {
+    next(error);
   }
-  return visibility;
 };
-
-const toNewDiaryEntry = (object: unknown): NewDiaryEntry => {
-  if (!object || typeof object !== 'object') {
-    throw new Error('Incorrect or missing data');
-  }
-
-  if ('comment' in object && 'date' in object && 'weather' in object && 'visibility' in object) {
-    const newEntry: NewDiaryEntry = {
-      comment: parseComment(object.comment),
-      date: parseDate(object.date),
-      weather: parseWeather(object.weather),
-      visibility: parseVisibility(object.visibility)
-    };
-    return newEntry;
-  } else {
-    throw new Error('Incorrect data: some fields are misssing');
-  }  
-};
-
-export default toNewDiaryEntry;
