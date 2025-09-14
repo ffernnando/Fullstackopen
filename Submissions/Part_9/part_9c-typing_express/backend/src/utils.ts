@@ -9,3 +9,7 @@ export const NewPatientSchema = z.object({
   dateOfBirth: z.string().date(),
   ssn: z.string()
 });
+
+export const PatientSearchSchema = z.object({
+  id: z.string()
+});

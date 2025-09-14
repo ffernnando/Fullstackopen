@@ -13,10 +13,15 @@ export type Diagnosis = {
   latin?: string;
 };
 
+export interface Entry {
+  id: string | undefined
+}
+
 //ssn i dateOfBirth = optional ???
 export interface Patient extends NewPatient{
-  id: string;
+  id: string,
+  entries: Entry[];
 };
 
-export type SanitizedPatiend = Omit<Patient, 'ssn'>;
+export type SanitizedPatiend = Omit<Patient, 'ssn' | 'entries'>;
 export type NewPatient = z.infer<typeof NewPatientSchema>;

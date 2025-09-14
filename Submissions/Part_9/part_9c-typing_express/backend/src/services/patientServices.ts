@@ -15,6 +15,7 @@ const getPatients = (): SanitizedPatiend[] => {
 const addPatient = (patient: NewPatient): Patient => {
   const newPatient: Patient = {
     id: uuid(),
+    entries: [],
     ...patient
   };
   
@@ -22,7 +23,13 @@ const addPatient = (patient: NewPatient): Patient => {
   return newPatient;
 };
 
+const findPatient = (id: string): Patient | undefined=> {
+  const foundPatient = patientData.find(p => p.id === id);
+  return foundPatient;
+};
+
 export {
   getPatients,
-  addPatient
+  addPatient,
+  findPatient
 };
