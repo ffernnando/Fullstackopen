@@ -1,12 +1,13 @@
 import { Typography } from "@mui/material";
-import { Gender, Patient } from "../types";
+import { Diagnosis, Gender, Patient } from "../types";
 import { useNavigate } from "react-router-dom";
 
 interface Props {
-  patient: Patient | undefined
+  patient: Patient | undefined;
+  diagnoses: Diagnosis[];
 }
 
-const PatientDetails = ({patient}: Props ) => {
+const PatientDetails = ({patient, diagnoses}: Props ) => {
   const navigate = useNavigate();
 
   console.log(patient);
@@ -38,6 +39,24 @@ const PatientDetails = ({patient}: Props ) => {
       </Typography>
       <Typography variant="body1" >ssn: {patient.ssn ? patient.ssn : 'unknown'}</Typography>
       <Typography variant="body1" >occupation: {patient.occupation}</Typography>
+      <Typography variant="h6">entries</Typography>
+      {patient.entries?.map(e => {
+        return(
+          <div>
+            <Typography variant="body1">
+              {e.date} | <i>{e.description}</i>
+            </Typography>
+            <ul>
+              {e.diagnosisCodes?.map(dc => {
+                const diagnosisDescription = diagnoses.find(d => d.code === dc)?.name;
+                return(
+                  <li key={dc}><Typography variant="body1">{`${dc} ${diagnosisDescription}`}</Typography></li>
+                );
+              })}
+            </ul>
+          </div>
+        );
+      })}
     </div>
   );
 };
