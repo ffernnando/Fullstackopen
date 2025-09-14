@@ -1,6 +1,6 @@
-import { Button, Divider, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import { Gender, Patient } from "../types";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   patient: Patient | undefined

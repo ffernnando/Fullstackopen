@@ -3,12 +3,13 @@ import { NewPatient, Patient, SanitizedPatiend } from "../types";
 import { v1 as uuid } from 'uuid';
 
 const getPatients = (): SanitizedPatiend[] => {
-  return patientData.map(({ id, name, dateOfBirth, gender, occupation}) => ({
+  return patientData.map(({ id, name, dateOfBirth, gender, occupation, entries }) => ({
     id,
     name,
     dateOfBirth,
     gender,
-    occupation
+    occupation,
+    entries
   }));
 };
 
@@ -25,6 +26,7 @@ const addPatient = (patient: NewPatient): Patient => {
 
 const findPatient = (id: string): Patient | undefined=> {
   const foundPatient = patientData.find(p => p.id === id);
+  console.log('foundPatient: ', foundPatient);
   return foundPatient;
 };
 

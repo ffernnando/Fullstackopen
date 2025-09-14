@@ -12,6 +12,7 @@ import PatientDetails from "./components/PatientDetails";
 
 const App = () => {
   const [patients, setPatients] = useState<Patient[]>([]);
+  const [selectedPatient, setSelectedPatient] = useState<Patient | undefined>(undefined);
 
   useEffect(() => {
     void axios.get<void>(`${apiBaseUrl}/ping`);
@@ -24,10 +25,17 @@ const App = () => {
   }, []);
 
   const match = useMatch('/patients/:id');
-  const selectedPatient = match
-    ? patients.find(patient => patient.id === String(match.params.id))
-    : undefined;
-  
+  useEffect(() => {
+    if (match?.params.id) {
+      patientService.findPatient(match?.params.id)
+        .then(data => setSelectedPatient(data))
+        .catch(error => {
+          console.error('Error fetching patient: ', error);
+        });
+    }
+    
+  }, [match]);
+
   return (
     <div className="App">
       
