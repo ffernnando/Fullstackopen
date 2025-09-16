@@ -1,13 +1,16 @@
 import { Typography } from "@mui/material";
 import { Diagnosis, Gender, Patient } from "../types";
 import { useNavigate } from "react-router-dom";
+import EntryDetails from "./EntryDetails";
+import NewEntryForm from "./AddEntryModal/NewEntryForm";
 
 interface Props {
   patient: Patient | undefined;
   diagnoses: Diagnosis[];
+  setSelectedPatient: React.Dispatch<React.SetStateAction<Patient | undefined>>;
 }
 
-const PatientDetails = ({patient, diagnoses}: Props ) => {
+const PatientDetails = ({patient, diagnoses, setSelectedPatient}: Props ) => {
   const navigate = useNavigate();
 
   console.log(patient);
@@ -39,27 +42,17 @@ const PatientDetails = ({patient, diagnoses}: Props ) => {
       </Typography>
       <Typography variant="body1" >ssn: {patient.ssn ? patient.ssn : 'unknown'}</Typography>
       <Typography variant="body1" >occupation: {patient.occupation}</Typography>
+
+      <NewEntryForm patient={patient} setSelectedPatient={setSelectedPatient}/>
+
       <Typography variant="h6">entries</Typography>
       {patient.entries?.map(e => {
         return(
-          <div>
-            <Typography variant="body1">
-              {e.date} | <i>{e.description}</i>
-            </Typography>
-            <ul>
-              {e.diagnosisCodes?.map(dc => {
-                const diagnosisDescription = diagnoses.find(d => d.code === dc)?.name;
-                return(
-                  <li key={dc}><Typography variant="body1">{`${dc} ${diagnosisDescription}`}</Typography></li>
-                );
-              })}
-            </ul>
-          </div>
+          <EntryDetails key={e.id} entry={e} diagnoses={diagnoses} />
         );
       })}
     </div>
   );
 };
-
 
 export default PatientDetails;
