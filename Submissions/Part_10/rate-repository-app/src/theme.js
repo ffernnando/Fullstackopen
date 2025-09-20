@@ -5,11 +5,11 @@ const theme = {
     textTertiary: 'white',
 
     primary: '#24292e',
-    secondary: '#3f80e1ff',
+    secondary: '#24A0ED',
     tertiary: '#e9e9e9ff',
 
     backgroundPrimary: 'white',
-
+    backgroundSecondary: '#f4f4f4'
   },
   fontSizes: {
     body: 14,
