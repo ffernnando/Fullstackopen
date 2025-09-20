@@ -1,15 +1,20 @@
 const theme = {
   colors: {
-    textPrimary: '#24292e',
-    textSecondary: '#586069',
-    
-    textBar: 'white',
+    textPrimary: 'black',
+    textSecondary: 'gray',
+    textTertiary: 'white',
+
     primary: '#24292e',
+    secondary: '#3f80e1ff',
+    tertiary: '#e9e9e9ff',
+
+    backgroundPrimary: 'white',
 
   },
   fontSizes: {
     body: 14,
     subheading: 16,
+    heading: 25,
   },
   fonts: {
     main: 'System',
