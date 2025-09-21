@@ -1,8 +1,9 @@
 import { FlatList, View, StyleSheet } from 'react-native';
 import RepositoryItem from './RepositoryItem';
 import theme from '../../theme';
+import { useEffect, useState } from 'react';
 
-const repositories = [
+/* const repositories = [
   {
     id: 'jaredpalmer.formik',
     fullName: 'jaredpalmer/formik',
@@ -47,7 +48,7 @@ const repositories = [
     reviewCount: 0,
     ownerAvatarUrl: 'https://avatars3.githubusercontent.com/u/13142323?v=4',
   },
-];
+]; */
 
 const styles = StyleSheet.create({
   separator: {
@@ -62,9 +63,30 @@ const styles = StyleSheet.create({
 const ItemSeparator = () => <View style={styles.separator} />;
 
 const RepositoryList = () => {
+  const [repositories, setRepositories] = useState();
+
+  const fetchRepositories = async () => {
+    // Replace the IP address part with your own IP address!
+    const response = await fetch('http://192.168.1.9:5000/api/repositories');
+    const json = await response.json();
+
+    console.log(json);
+
+    setRepositories(json);
+  };
+
+  useEffect(() => {
+    fetchRepositories();
+  }, []);
+
+  // Get the nodes from the edges array
+  const repositoryNodes = repositories
+    ? repositories.edges.map((edge) => edge.node)
+    : [];
+
   return (
     <FlatList
-      data={repositories}
+      data={repositoryNodes}
       ItemSeparatorComponent={ItemSeparator}
       keyExtractor={(item) => item.id}
       renderItem={({ item }) => <RepositoryItem item={item} />}
