@@ -1,6 +1,7 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import theme from '../../theme';
 import { Link } from 'react-router-native';
+import useAuthStorage from '../../hooks/useAuthStorage';
 
 const style = StyleSheet.create({
   pressable: {
@@ -19,7 +20,7 @@ const style = StyleSheet.create({
   },
 });
 
-const AppBarTab = ({ text, link }) => {
+const AppBarTab = ({ text, link, onPress }) => {
   const textStyles = [
     style.text,
     text === 'Repositories' ? style.mainTab : style.secondaryTab,
@@ -28,7 +29,7 @@ const AppBarTab = ({ text, link }) => {
   return (
     <View>
       <Pressable style={style.pressable}>
-        <Link to={link}>
+        <Link to={link} onPress={onPress}>
           <Text style={textStyles}>{text}</Text>
         </Link>
       </Pressable>

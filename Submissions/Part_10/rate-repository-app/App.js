@@ -7,7 +7,11 @@ import { ApolloProvider } from '@apollo/client/react'
 import createApolloClient from './src/utils/apolloClient';
 import Constants from 'expo-constants';
 
-const apolloClient = createApolloClient();
+import AuthStorage from './src/utils/authStorage';
+import AuthStorageContext from './src/contexts/AuthStorageContext';
+
+const authStorage = new AuthStorage();
+const apolloClient = createApolloClient(authStorage);
 
 const App = () => {
   console.log(Constants.expoConfig);
@@ -15,7 +19,9 @@ const App = () => {
     <>
         <ApolloProvider client={apolloClient}>
           <NativeRouter>
-            <Main />
+            <AuthStorageContext.Provider value={authStorage}>
+              <Main />
+            </AuthStorageContext.Provider>
           </NativeRouter>
           <StatusBar style='auto' />    
         </ApolloProvider>    
