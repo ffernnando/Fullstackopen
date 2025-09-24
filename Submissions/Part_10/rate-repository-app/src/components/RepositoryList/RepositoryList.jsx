@@ -3,18 +3,14 @@ import RepositoryItem from './RepositoryItem';
 import theme from '../../theme';
 import { useEffect, useState } from 'react';
 import useRepositories from '../../hooks/useRepositories';
+import SingleRepository from './RepositoryItem';
+import ItemSeparator from './ItemSeparator';
 
 const styles = StyleSheet.create({
-  separator: {
-    height: 12,
-    backgroundColor: theme.colors.tertiary,
-  },
   container: {
     backgroundColor: theme.colors.backgroundPrimary,
   },
 });
-
-const ItemSeparator = () => <View style={styles.separator} />;
 
 export const RepositoryListContainer = ({ repositories }) => {
   const repositoryNodes = repositories
@@ -26,7 +22,7 @@ export const RepositoryListContainer = ({ repositories }) => {
       data={repositoryNodes}
       ItemSeparatorComponent={ItemSeparator}
       keyExtractor={(item) => item.id}
-      renderItem={({ item }) => <RepositoryItem item={item} />}
+      renderItem={({ item }) => <SingleRepository repository={item} />}
       style={styles.container}
     />
   );

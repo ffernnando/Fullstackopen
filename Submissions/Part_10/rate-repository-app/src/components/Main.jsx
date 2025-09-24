@@ -15,6 +15,7 @@ import SignIn from './SignIn';
 import RepositoryItem from './RepositoryList/RepositoryItem';
 import useRepository from '../hooks/useRepository';
 import theme from '../theme';
+import SingleRepository from './RepositoryList/RepositoryItem';
 
 const styles = StyleSheet.create({
   container: {
@@ -29,9 +30,9 @@ const styles = StyleSheet.create({
 
 const Main = () => {
   const match = useMatch('/repository/:id');
-  console.log(match?.params?.id);
+  console.log('MAIN - match params id', match?.params?.id);
   const { repository } = useRepository(match?.params?.id);
-  console.log('repository: ', repository);
+  console.log('MAIN - repository: ', repository);
 
   return (
     <View style={styles.container}>
@@ -41,7 +42,7 @@ const Main = () => {
         <Route path='/' element={<RepositoryList />} />
         <Route
           path='/repository/:id'
-          element={<RepositoryItem item={repository} />}
+          element={<SingleRepository repository={repository} />}
         />
         <Route path='/sign-in' element={<SignIn />} />
         <Route path='*' element={<Navigate to='/' replace />} />

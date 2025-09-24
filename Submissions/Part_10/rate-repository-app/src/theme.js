@@ -11,7 +11,7 @@ const theme = {
     tertiary: '#e9e9e9ff',
 
     backgroundPrimary: 'white',
-    backgroundSecondary: '#f4f4f4'
+    backgroundSecondary: '#e9e9e9ff'
   },
   fontSizes: {
     body: 14,
