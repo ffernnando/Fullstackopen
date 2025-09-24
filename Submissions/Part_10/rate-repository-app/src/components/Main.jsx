@@ -16,6 +16,7 @@ import RepositoryItem from './RepositoryList/RepositoryItem';
 import useRepository from '../hooks/useRepository';
 import theme from '../theme';
 import SingleRepository from './RepositoryList/RepositoryItem';
+import CreateReview from './CreateReview/CreateReview';
 
 const styles = StyleSheet.create({
   container: {
@@ -45,6 +46,7 @@ const Main = () => {
           element={<SingleRepository repository={repository} />}
         />
         <Route path='/sign-in' element={<SignIn />} />
+        <Route path='/create-review' element={<CreateReview />} />
         <Route path='*' element={<Navigate to='/' replace />} />
       </Routes>
     </View>

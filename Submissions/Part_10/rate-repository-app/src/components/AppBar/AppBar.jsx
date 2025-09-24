@@ -20,6 +20,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
+  sideTabs: {
+    display: 'flex',
+    flexDirection: 'row',
+  },
 });
 
 const AppBar = () => {
@@ -41,7 +45,10 @@ const AppBar = () => {
       <ScrollView horizontal contentContainerStyle={styles.scrollView}>
         <AppBarTab text='Repositories' link='/' />
         {verifyUser?.data?.me !== null ? (
-          <AppBarTab text='Sign-out' link='/' onPress={signOut} />
+          <View style={styles.sideTabs}>
+            <AppBarTab text='Sign-out' link='/' onPress={signOut} />
+            <AppBarTab text='Create review' link='/create-review' />
+          </View>
         ) : (
           <AppBarTab text='Sign-in' link='/sign-in' />
         )}
