@@ -1,9 +1,12 @@
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import theme from '../../theme';
 import NumberContainer from './NumberContainer';
+import { useNavigate, useParams } from 'react-router-native';
+import * as Linking from 'expo-linking';
 
 const style = StyleSheet.create({
   container: {
+    display: 'flex',
     flexDirection: 'column',
     backgroundColor: theme.colors.backgroundPrimary,
     padding: 10,
@@ -55,9 +58,30 @@ const style = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-evenly',
   },
+
+  linkPressable: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 5,
+    padding: 10,
+    backgroundColor: theme.colors.secondary,
+  },
+  linkText: {
+    color: theme.colors.backgroundSecondary,
+    fontWeight: theme.fontWeights.bold,
+    fontSize: theme.fontSizes.subheading,
+  },
 });
 
 const RepositoryItem = ({ item }) => {
+  if (!item) {
+    return null;
+  }
+  const navigate = useNavigate();
+  const params = useParams();
+  console.log('params id: ', params.id);
+
   const counts = {
     forksCount:
       item.forksCount >= 1000
@@ -77,44 +101,65 @@ const RepositoryItem = ({ item }) => {
         : `${item.reviewCount}`,
   };
 
+  const pressSelect = () => {
+    console.log('navigatePath: ', `/repository/${item.id}`);
+    navigate(`/repository/${item.id}`);
+  };
+
   return (
     <View style={style.container} testID='repositoryItem'>
-      <View style={style.imageAndTextContainer}>
-        <View>
-          <Image style={style.image} source={{ uri: item.ownerAvatarUrl }} />
-        </View>
+      <Pressable onPress={pressSelect}>
+        <View style={style.imageAndTextContainer}>
+          <View>
+            <Image style={style.image} source={{ uri: item.ownerAvatarUrl }} />
+          </View>
 
-        <View style={style.textInfo}>
-          <Text style={style.boldText}>{item.fullName}</Text>
-          <Text style={style.grayText}>{item.description}</Text>
-          <View style={style.languageView}>
-            <Text style={style.whiteText}>{item.language}</Text>
+          <View style={style.textInfo}>
+            <Text style={style.boldText}>{item.fullName}</Text>
+            <Text style={style.grayText}>{item.description}</Text>
+            <View style={style.languageView}>
+              <Text style={style.whiteText}>{item.language}</Text>
+            </View>
           </View>
         </View>
-      </View>
 
-      <View style={style.numberContainers}>
-        <NumberContainer
-          parentStyle={style}
-          data={counts.forksCount}
-          label='Forks'
-        />
-        <NumberContainer
-          parentStyle={style}
-          data={counts.stargazersCount}
-          label='Stars'
-        />
-        <NumberContainer
-          parentStyle={style}
-          data={counts.reviewCount}
-          label='Reviews'
-        />
-        <NumberContainer
-          parentStyle={style}
-          data={counts.ratingAverage}
-          label='Rating'
-        />
-      </View>
+        <View style={style.numberContainers}>
+          <NumberContainer
+            parentStyle={style}
+            data={counts.forksCount}
+            label='Forks'
+          />
+          <NumberContainer
+            parentStyle={style}
+            data={counts.stargazersCount}
+            label='Stars'
+          />
+          <NumberContainer
+            parentStyle={style}
+            data={counts.reviewCount}
+            label='Reviews'
+          />
+          <NumberContainer
+            parentStyle={style}
+            data={counts.ratingAverage}
+            label='Rating'
+          />
+        </View>
+      </Pressable>
+      {params.id ? (
+        <View>
+          <Pressable
+            style={style.linkPressable}
+            onPress={() => {
+              Linking.openURL(item.url);
+            }}
+          >
+            <Text style={style.linkText}>Open in GitHub</Text>
+          </Pressable>
+        </View>
+      ) : (
+        <></>
+      )}
     </View>
   );
 };

@@ -1,6 +1,7 @@
-import {  render, screen } from '@testing-library/react-native'
+import {  fireEvent, render, screen, waitFor } from '@testing-library/react-native'
 
 import { RepositoryListContainer } from "../components/RepositoryList/RepositoryList";
+import { SignInContainer } from '../components/SignIn';
 
 describe('RepositoryList', () => {
   describe('RepositoryListContainer', () => {
@@ -54,6 +55,27 @@ describe('RepositoryList', () => {
       const [firstRepositoryItem, secondRepositoryItem] = repositoryItems;
       expect(firstRepositoryItem).toHaveTextContent('jaredpalmer/formikBuild forms in React, without the tearsTypeScript1.6kForks21.9kStars3Reviews88Rating');
       expect(secondRepositoryItem).toHaveTextContent('async-library/react-asyncFlexible promise-based React data loaderJavaScript69Forks1.8kStars3Reviews72Rating');
+    });
+  });
+});
+
+describe('SignIn', () => {
+  describe('SignInContainer', () => {
+    it('calls onsubmit function with correct arguments whena  avalid form is submitted', async () => {
+      const onSubmit = jest.fn()
+      render(<SignInContainer onSubmit={onSubmit} />)
+
+      fireEvent.changeText(screen.getByPlaceholderText('Username'), 'kalle');
+      fireEvent.changeText(screen.getByPlaceholderText('Password'), 'password');
+      fireEvent.press(screen.getByText('Sign in'));
+
+      await waitFor(() => {
+        expect(onSubmit).toHaveBeenCalledTimes(1);
+        expect(onSubmit.mock.calls[0][0]).toEqual({
+          username: 'kalle',
+          password: 'password',
+        });
+      });
     });
   });
 });
