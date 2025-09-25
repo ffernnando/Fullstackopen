@@ -227,6 +227,8 @@ const RepositoryInfo = ({ item, id }) => {
 
 const ReviewItem = ({ review }) => {
   const data = review.node;
+  const date = data ? (data.createdAt.split('T'))[0] : '';
+  
   console.log('review ietm: ', data);
   return (
     <View style={style.reviewContainer}>
@@ -238,7 +240,7 @@ const ReviewItem = ({ review }) => {
 
       <View style={style.reviewContent}>
         <Text style={style.usernameText}>{data.user.username}</Text>
-        <Text style={style.createdDateText}>{data.createdAt}</Text>
+        <Text style={style.createdDateText}>{date}</Text>
         <Text style={style.reviewText}>{data.text}</Text>
       </View>
     </View>

@@ -9,14 +9,13 @@ import {
   Routes,
   Navigate,
   useMatch,
-  useParams,
 } from 'react-router-native';
-import SignIn from './SignIn';
-import RepositoryItem from './RepositoryList/RepositoryItem';
 import useRepository from '../hooks/useRepository';
 import theme from '../theme';
 import SingleRepository from './RepositoryList/RepositoryItem';
 import CreateReview from './CreateReview/CreateReview';
+import SignIn from './SignIn/SignIn';
+import SignUp from './SignUp/SignUp';
 
 const styles = StyleSheet.create({
   container: {
@@ -46,6 +45,7 @@ const Main = () => {
           element={<SingleRepository repository={repository} />}
         />
         <Route path='/sign-in' element={<SignIn />} />
+        <Route path='/sign-up' element={<SignUp />} />
         <Route path='/create-review' element={<CreateReview />} />
         <Route path='*' element={<Navigate to='/' replace />} />
       </Routes>

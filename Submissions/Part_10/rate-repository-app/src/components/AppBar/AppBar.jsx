@@ -2,8 +2,6 @@ import { View, StyleSheet, Pressable, ScrollView } from 'react-native';
 import Constants from 'expo-constants';
 import AppBarTab from './AppBarTab';
 import Theme from '../../theme';
-import { Link } from 'react-router-native';
-import { Text } from 'react-native';
 import { useQuery } from '@apollo/client/react';
 import { ME } from '../../graphql/queries';
 import useAuthStorage from '../../hooks/useAuthStorage';
@@ -50,7 +48,10 @@ const AppBar = () => {
             <AppBarTab text='Create review' link='/create-review' />
           </View>
         ) : (
-          <AppBarTab text='Sign-in' link='/sign-in' />
+          <View style={styles.sideTabs}>
+            <AppBarTab text='Sign-in' link='/sign-in' />
+            <AppBarTab text='Sign-up' link='/sign-up' />
+          </View>
         )}
       </ScrollView>
     </View>
