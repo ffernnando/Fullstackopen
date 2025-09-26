@@ -13,22 +13,24 @@ const styles = StyleSheet.create({
 
 const getUserReviews = () => {
   try {
-    const user = useQuery(ME, {
+    return useQuery(ME, {
       variables: { includeReviews: true },
     });
-    return user?.data?.me?.reviews?.edges;
   } catch (e) {
     console.log(e);
   }
 };
-
+//?.data?.me?.reviews?.edges
 const UserReviews = () => {
-  const userReviews = getUserReviews();
+  const user = getUserReviews();
+  const userReviews = user?.data?.me?.reviews?.edges;
+  const refetch = user?.refetch;
+  
   return (
     <View style={styles.container}>
       <FlatList
         data={userReviews}
-        renderItem={({ item }) => <ReviewItem review={item} usersReviews={true} />}
+        renderItem={({ item }) => <ReviewItem review={item} usersReviews={true} refetch={refetch} />}
         keyExtractor={({ id }) => id}
         ItemSeparatorComponent={<ItemSeparator />}
       /> 

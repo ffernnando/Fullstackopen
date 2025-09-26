@@ -9,7 +9,8 @@ const theme = {
     primary: '#24292e',
     secondary: '#24A0ED',
     tertiary: '#e9e9e9ff',
-
+    quaternary: '#C70000',
+    
     backgroundPrimary: 'white',
     backgroundSecondary: '#e9e9e9ff'
   },
