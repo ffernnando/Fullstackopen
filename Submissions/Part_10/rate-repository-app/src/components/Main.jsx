@@ -12,10 +12,10 @@ import {
 } from 'react-router-native';
 import useRepository from '../hooks/useRepository';
 import theme from '../theme';
-import SingleRepository from './RepositoryList/RepositoryItem';
 import CreateReview from './CreateReview/CreateReview';
 import SignIn from './SignIn/SignIn';
 import SignUp from './SignUp/SignUp';
+import SingleRepository from './RepositoryList/RepositoryItem/RepositoryItem';
 
 const styles = StyleSheet.create({
   container: {

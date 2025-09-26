@@ -6,11 +6,12 @@ import {
   Text,
   View,
 } from 'react-native';
-import theme from '../../theme';
+
 import NumberContainer from './NumberContainer';
 import { useNavigate, useParams } from 'react-router-native';
 import * as Linking from 'expo-linking';
-import ItemSeparator from './ItemSeparator';
+import theme from '../../../theme';
+import ItemSeparator from '../ItemSeparator';
 
 const style = StyleSheet.create({
   container: {
