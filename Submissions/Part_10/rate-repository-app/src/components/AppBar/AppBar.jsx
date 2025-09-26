@@ -28,8 +28,10 @@ const AppBar = () => {
   const auth = useAuthStorage();
   const apolloClient = useApolloClient();
 
-  const verifyUser = useQuery(ME);
-  console.log('verifyUser: ', verifyUser.data);
+  const verifyUser = useQuery(ME, {
+    variables: { includeReviews: true }
+  });
+  console.log('verifyUser: ');
 
   const signOut = async () => {
     console.log('GETTING CALLED HERE');
@@ -44,8 +46,9 @@ const AppBar = () => {
         <AppBarTab text='Repositories' link='/' />
         {verifyUser?.data?.me !== null ? (
           <View style={styles.sideTabs}>
-            <AppBarTab text='Sign-out' link='/' onPress={signOut} />
+            <AppBarTab text='Your reviews' link='/user-reviews' />
             <AppBarTab text='Create review' link='/create-review' />
+            <AppBarTab text='Sign-out' link='/' onPress={signOut} />
           </View>
         ) : (
           <View style={styles.sideTabs}>
