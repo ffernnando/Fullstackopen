@@ -1,21 +1,26 @@
 import { gql } from "@apollo/client";
 
 export const GET_REPOSITORIES = gql`
-  query Repositories($orderDirection: OrderDirection, $orderBy: AllRepositoriesOrderBy, $searchKeyword: String) {
-    repositories(orderDirection: $orderDirection, orderBy: $orderBy, searchKeyword: $searchKeyword) {
+  query Repositories($orderDirection: OrderDirection, $orderBy: AllRepositoriesOrderBy, $searchKeyword: String, $after: String) {
+    repositories(first: 5, orderDirection: $orderDirection, orderBy: $orderBy, searchKeyword: $searchKeyword, after: $after) {
       edges {
         node {
-          id,
-            ownerAvatarUrl,
-            fullName,
-            description,
-            language,
-            forksCount,
-            stargazersCount,
-            reviewCount,
-            ratingAverage,
-            url
+          id
+          ownerAvatarUrl
+          fullName
+          description
+          language
+          forksCount
+          stargazersCount
+          reviewCount
+          ratingAverage
+          url
         }
+        cursor
+      }
+      pageInfo {
+        endCursor
+        hasNextPage
       }
     }
   }
@@ -24,17 +29,17 @@ export const GET_REPOSITORIES = gql`
 export const GET_REPOSITORY = gql`
   query repository($repositoryId: ID!) {
     repository(id: $repositoryId) {
-      id,  
-      ownerAvatarUrl,
-      fullName,
-      description,
-      language,
-      forksCount,
-      stargazersCount,
-      reviewCount,
-      ratingAverage,
-      url,
-      reviews {
+      id
+      ownerAvatarUrl
+      fullName
+      description
+      language
+      forksCount
+      stargazersCount
+      reviewCount
+      ratingAverage
+      url
+      reviews(first: 6) {
         edges {
           node {
             id,
@@ -46,6 +51,12 @@ export const GET_REPOSITORY = gql`
               username,
             }
           }
+          cursor
+        }
+        pageInfo {
+          endCursor
+          startCursor
+          hasNextPage
         }
       }
     }
@@ -58,7 +69,8 @@ export const ME = gql`
     me {
       id
       username
-      reviews @include(if: $includeReviews) {
+      reviews(first: 6) @include(if: $includeReviews) {
+        
         edges {
           node {
             id
@@ -70,6 +82,12 @@ export const ME = gql`
             createdAt
             text
           }
+          cursor
+        }
+        pageInfo {
+          endCursor
+          startCursor
+          hasNextPage
         }
       }
     }

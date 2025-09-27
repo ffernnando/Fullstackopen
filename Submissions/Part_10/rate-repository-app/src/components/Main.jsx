@@ -4,12 +4,7 @@ import RepositoryList from './RepositoryList/RepositoryList';
 import Text from './Text';
 import AppBar from './AppBar/AppBar';
 
-import {
-  Route,
-  Routes,
-  Navigate,
-  useMatch,
-} from 'react-router-native';
+import { Route, Routes, Navigate, useMatch } from 'react-router-native';
 import useRepository from '../hooks/useRepository';
 import theme from '../theme';
 import CreateReview from './CreateReview/CreateReview';
@@ -32,7 +27,7 @@ const styles = StyleSheet.create({
 const Main = () => {
   const match = useMatch('/repository/:id');
   console.log('MAIN - match params id', match?.params?.id);
-  const { repository } = useRepository(match?.params?.id);
+  const { repository, fetchMore } = useRepository(match?.params?.id);
   console.log('MAIN - repository: ', repository);
 
   return (
@@ -43,7 +38,7 @@ const Main = () => {
         <Route path='/' element={<RepositoryList />} />
         <Route
           path='/repository/:id'
-          element={<SingleRepository repository={repository} />}
+          element={<SingleRepository repository={repository} fetchMore={fetchMore} />}
         />
         <Route path='/sign-in' element={<SignIn />} />
         <Route path='/sign-up' element={<SignUp />} />

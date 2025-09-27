@@ -13,6 +13,7 @@ import * as Linking from 'expo-linking';
 import theme from '../../../theme';
 import ItemSeparator from '../ItemSeparator';
 import ReviewItem from './ReviewItem';
+import useRepository from '../../../hooks/useRepository';
 
 const style = StyleSheet.create({
   container: {
@@ -83,7 +84,10 @@ const style = StyleSheet.create({
     fontSize: theme.fontSizes.subheading,
   },
 
-  
+  //Single repository
+  singleRepoContainer: {
+    flex: 1,
+  },
 });
 
 const RepositoryInfo = ({ item, id }) => {
@@ -177,126 +181,42 @@ const RepositoryInfo = ({ item, id }) => {
   );
 };
 
-
-
-const SingleRepository = ({ repository }) => {
+const SingleRepository = ({ repository, fetchMore }) => {
   if (!repository) {
     return null;
   }
+
   console.log('REPO: ', repository);
   const params = useParams();
   console.log('params id: ', params.id);
 
-  const reviews = params.id ? repository.reviews : [];
-  console.log('reviews: ', reviews.edges);
+  const reviewList = params.id ? repository?.reviews.edges : [];
+  console.log('reviewList: ', reviewList);
 
-  return (
-    <FlatList
-      data={reviews.edges}
-      renderItem={({ item }) => <ReviewItem review={item} />}
-      keyExtractor={({ id }) => id}
-      ItemSeparatorComponent={ItemSeparator}
-      ListHeaderComponent={() => (
-        <View>
-          <RepositoryInfo item={repository} id={params.id} />
-          <ItemSeparator />
-        </View>
-      )}
-    />
-  );
-};
-export default SingleRepository;
-
-/*
-const RepositoryItem = ({ item }) => {
-  if (!item) {
-    return null;
-  }
-  const navigate = useNavigate();
-  const params = useParams();
-  console.log('params id: ', params.id);
-
-  const counts = {
-    forksCount:
-      item.forksCount >= 1000
-        ? `${Math.round(item.forksCount / 100) / 10}k`
-        : `${item.forksCount}`,
-    stargazersCount:
-      item.stargazersCount >= 1000
-        ? `${Math.round(item.stargazersCount / 100) / 10}k`
-        : `${item.stargazersCount}`,
-    ratingAverage:
-      item.ratingAverage >= 1000
-        ? `${Math.round(item.ratingAverage / 100) / 10}k`
-        : `${item.ratingAverage}`,
-    reviewCount:
-      item.reviewCount >= 1000
-        ? `${Math.round(item.reviewCount / 100) / 10}k`
-        : `${item.reviewCount}`,
-  };
-
-  const pressSelect = () => {
-    console.log('navigatePath: ', `/repository/${item.id}`);
-    navigate(`/repository/${item.id}`);
+  const onEndReach = () => {
+    console.log('You have reached the end of the list');
+    fetchMore();
   };
 
   return (
-    <View style={style.container} testID='repositoryItem'>
-      <Pressable onPress={pressSelect}>
-        <View style={style.imageAndTextContainer}>
-          <View>
-            <Image style={style.image} source={{ uri: item.ownerAvatarUrl }} />
-          </View>
-
-          <View style={style.textInfo}>
-            <Text style={style.boldText}>{item.fullName}</Text>
-            <Text style={style.grayText}>{item.description}</Text>
-            <View style={style.languageView}>
-              <Text style={style.whiteText}>{item.language}</Text>
-            </View>
-          </View>
-        </View>
-
-        <View style={style.numberContainers}>
-          <NumberContainer
-            parentStyle={style}
-            data={counts.forksCount}
-            label='Forks'
-          />
-          <NumberContainer
-            parentStyle={style}
-            data={counts.stargazersCount}
-            label='Stars'
-          />
-          <NumberContainer
-            parentStyle={style}
-            data={counts.reviewCount}
-            label='Reviews'
-          />
-          <NumberContainer
-            parentStyle={style}
-            data={counts.ratingAverage}
-            label='Rating'
-          />
-        </View>
-      </Pressable>
+    <View style={style.singleRepoContainer}>
+      <View>
+        <RepositoryInfo item={repository} id={params.id} />
+      </View>
       {params.id ? (
-        <View>
-          <Pressable
-            style={style.linkPressable}
-            onPress={() => {
-              Linking.openURL(item.url);
-            }}
-          >
-            <Text style={style.linkText}>Open in GitHub</Text>
-          </Pressable>
-        </View>
+        <FlatList
+          data={reviewList}
+          renderItem={({ item }) => <ReviewItem review={item} />}
+          keyExtractor={({ id }) => id}
+          ItemSeparatorComponent={ItemSeparator}
+          onEndReached={onEndReach}
+          onEndReachedThreshold={0.5}
+          ListHeaderComponent={ItemSeparator}
+        />
       ) : (
         <></>
       )}
     </View>
   );
 };
-
-export default RepositoryItem;
-*/
+export default SingleRepository;

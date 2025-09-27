@@ -1,39 +1,41 @@
 import { FlatList, StyleSheet, View } from 'react-native';
 import ReviewItem from '../RepositoryList/RepositoryItem/ReviewItem';
 import ItemSeparator from '../RepositoryList/ItemSeparator';
-import { useQuery } from '@apollo/client/react';
-import { ME } from '../../graphql/queries';
+import useUserReviews from '../../hooks/useUserReviews';
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     display: 'flex',
     flexDirection: 'column',
   },
 });
 
-const getUserReviews = () => {
-  try {
-    return useQuery(ME, {
-      variables: { includeReviews: true },
-    });
-  } catch (e) {
-    console.log(e);
-  }
-};
+
 //?.data?.me?.reviews?.edges
 const UserReviews = () => {
-  const user = getUserReviews();
-  const userReviews = user?.data?.me?.reviews?.edges;
-  const refetch = user?.refetch;
-  
+  const { user, fetchMore, refetch } = useUserReviews();
+
+  //const user = getUserReviews();
+  const userReviews = user?.reviews?.edges;
+  //const refetch = user?.refetch;
+
+  const onEndReach = () => {
+    console.log('End reached');
+    fetchMore();
+  };
   return (
     <View style={styles.container}>
       <FlatList
         data={userReviews}
-        renderItem={({ item }) => <ReviewItem review={item} usersReviews={true} refetch={refetch} />}
+        renderItem={({ item }) => (
+          <ReviewItem review={item} usersReviews={true} refetch={refetch} />
+        )}
         keyExtractor={({ id }) => id}
-        ItemSeparatorComponent={<ItemSeparator />}
-      /> 
+        ItemSeparatorComponent={ItemSeparator}
+        onEndReached={onEndReach}
+        onEndReachedThreshold={0.5}
+      />
     </View>
   );
 };

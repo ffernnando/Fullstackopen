@@ -20,6 +20,7 @@ const styles = StyleSheet.create({
 
 export const RepositoryListContainer = ({
   repositories,
+  onEndReach,
   searchKeyword,
   setSearchKeyword,
   setOrderPrinciple,
@@ -35,11 +36,18 @@ export const RepositoryListContainer = ({
       keyExtractor={(item) => item.id}
       renderItem={({ item }) => <SingleRepository repository={item} />}
       style={styles.container}
-      ListHeaderComponent={<RepositoryListHeader searchKeyword={searchKeyword} setSearchKeyword={setSearchKeyword} setOrderPrinciple={setOrderPrinciple} />}
+      ListHeaderComponent={
+        <RepositoryListHeader
+          searchKeyword={searchKeyword}
+          setSearchKeyword={setSearchKeyword}
+          setOrderPrinciple={setOrderPrinciple}
+        />
+      }
+      onEndReached={onEndReach}
+      onEndReachedThreshold={0.5}
     />
   );
 };
-
 
 const RepositoryList = () => {
   const [orderPrinciple, setOrderPrinciple] = useState({
@@ -49,7 +57,15 @@ const RepositoryList = () => {
   const [searchKeyword, setSearchKeyword] = useState('');
   const [searchValue] = useDebounce(searchKeyword, 400);
 
-  const { repositories } = useRepositories(orderPrinciple, searchValue);
+  const { repositories, fetchMore } = useRepositories(
+    orderPrinciple,
+    searchValue
+  );
+
+  const onEndReach = () => {
+    console.log('You have reached the end of the list');
+    fetchMore();
+  };
 
   return (
     <RepositoryListContainer
@@ -57,6 +73,7 @@ const RepositoryList = () => {
       searchKeyword={searchKeyword}
       setSearchKeyword={setSearchKeyword}
       setOrderPrinciple={setOrderPrinciple}
+      onEndReach={onEndReach}
     />
   );
 };
