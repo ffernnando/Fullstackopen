@@ -1,5 +1,7 @@
 const express = require('express');
+const redis = require('../redis');
 const router = express.Router();
+
 
 const configs = require('../util/config')
 
@@ -13,6 +15,13 @@ router.get('/', async (req, res) => {
     ...configs,
     visits
   });
+});
+
+router.get('/statistics', async (req, res) => {
+  const todo_key = 'added_todos';
+  const todos = await redis.getAsync(todo_key);
+
+  res.send({ 'added_todos': todos })
 });
 
 module.exports = router;
