@@ -60,6 +60,8 @@ typings/
 # next.js build output
 .next
 
-#mongo database + start command
+#mongo database
 mongo_data
 
+#redis data folder
+redis_data
