@@ -6,8 +6,6 @@ services:
       dockerfile: dev.Dockerfile
     volumes:
       - ./todo-frontend:/usr/src/app
-    ports:
-      - 5173:5173
     container_name: todo-front-dev
   server:
     image: todo-back-dev
@@ -16,8 +14,6 @@ services:
       dockerfile: dev.Dockerfile
     volumes:
       - ./todo-backend:/usr/src/app
-    ports:
-      - 3000:3000
     container_name: todo-back-dev
     environment:
       - REDIS_URL=redis://redis:6379
@@ -26,8 +22,6 @@ services:
       - redis
   mongo:
     image: mongo
-    ports:
-      - 3456:27017
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
@@ -38,8 +32,6 @@ services:
   redis:
     image: redis:8.6-alpine
     restart: always
-    ports:
-      - 6379:6379
     command: ['redis-server', '--appendonly', 'yes']
     volumes:
       - ./todo-backend/redis_data:/data
